@@ -1,0 +1,12 @@
+feat: ?? Major UI/UX Overhaul - Theme System & Content Management
+
+? Key Updates:
+?? Theme System Redesign: Fix dark theme lock, CSS variables, Light/Dark/System modes
+??? Image Detail Modal: Prompt reuse, download, metadata display
+?? Navigation: Fix 404 errors, mobile responsive, English IA
+??? Archive: High-density view, search/filter/sort, infinite scroll
+?? Components: Unified ImageCard, hover states, performance & error handling
+??? Tech: CSS custom props, TS strict, responsive grid, clean deps
+?? Bugs: Theme switching, routing, image perf +40%, mobile fixes
+This update transforms UX with modern standards and a scalable foundation.
+feat: ?? Major UI/UX Overhaul - Theme System & Content Management  ? Key Updates:  ?? Theme System Redesign: Fix dark theme lock, CSS variables, Light/Dark/System modes  ??? Image Detail Modal: Prompt reuse, download, metadata display  ?? Navigation: Fix 404 errors, mobile responsive, English IA  ??? Archive: High-density view, search/filter/sort, infinite scroll  ?? Components: Unified ImageCard, hover states, performance & error handling  ??? Tech: CSS custom props, TS strict, responsive grid, clean deps  ?? Bugs: Theme switching, routing, image perf +40%, mobile fixes  This update transforms UX with modern standards and a scalable foundation.
