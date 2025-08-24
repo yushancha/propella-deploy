@@ -3,8 +3,9 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 
-// 创建Prisma客户端实例
-const prisma = new PrismaClient();
+// 仅在设置了 DATABASE_URL 时才创建 Prisma 客户端
+const hasDatabase = !!process.env.DATABASE_URL;
+const prisma = hasDatabase ? new PrismaClient() : (null as unknown as PrismaClient);
 
 // 添加调试日志
 console.log("NextAuth 配置初始化...");
@@ -17,9 +18,12 @@ console.log("- GOOGLE_CLIENT_SECRET 已设置:", !!process.env.GOOGLE_CLIENT_SEC
 const proxyEnabled = !!(process.env.HTTP_PROXY || process.env.HTTPS_PROXY);
 console.log("- 代理设置状态:", proxyEnabled ? "已启用" : "已禁用");
 
+console.log("- DATABASE_URL 已设置:", hasDatabase);
+
 // 创建NextAuth处理程序
 const handler = NextAuth({
-  adapter: PrismaAdapter(prisma),
+  // 当没有设置数据库时，不使用 PrismaAdapter，允许纯 JWT 模式运行
+  ...(hasDatabase ? { adapter: PrismaAdapter(prisma) } : {}),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
