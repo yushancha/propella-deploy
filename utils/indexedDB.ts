@@ -1,4 +1,4 @@
-// IndexedDB 数据访问层
+// IndexedDB data access layer
 interface GenerationRecord {
   id: string;
   name: string;
@@ -45,7 +45,7 @@ class PropellaDB {
             keyPath: 'id'
           });
           
-          // 创建时间戳索引用于排序
+          // Create timestamp index for sorting
           store.createIndex('timestamp', 'timestamp', { unique: false });
           store.createIndex('style', 'style', { unique: false });
           
@@ -89,7 +89,7 @@ class PropellaDB {
       const store = transaction.objectStore(this.storeName);
       const index = store.index('timestamp');
       
-      // 获取所有记录并按时间戳降序排列
+      // Get all records and sort by timestamp in descending order
       const request = index.getAll();
       
       request.onsuccess = () => {
@@ -99,8 +99,31 @@ class PropellaDB {
       };
       
       request.onerror = () => {
-        console.error('Error fetching generations:', request.error);
-        reject(new Error('Could not fetch generations from database'));
+        console.error('Error loading generations:', request.error);
+        reject(new Error('Could not load generations from database'));
+      };
+    });
+  }
+
+  async getGenerationsByStyle(style: string): Promise<GenerationRecord[]> {
+    await this.init();
+    
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction([this.storeName], 'readonly');
+      const store = transaction.objectStore(this.storeName);
+      const index = store.index('style');
+      
+      const request = index.getAll(style);
+      
+      request.onsuccess = () => {
+        const results = request.result.sort((a, b) => b.timestamp - a.timestamp);
+        console.log(`Loaded ${results.length} generations with style '${style}'`);
+        resolve(results);
+      };
+      
+      request.onerror = () => {
+        console.error('Error loading generations by style:', request.error);
+        reject(new Error('Could not load generations by style from database'));
       };
     });
   }
@@ -114,7 +137,7 @@ class PropellaDB {
       const request = store.delete(id);
       
       request.onsuccess = () => {
-        console.log(`Generation ${id} deleted from IndexedDB`);
+        console.log('Generation deleted from IndexedDB:', id);
         resolve();
       };
       
@@ -145,61 +168,100 @@ class PropellaDB {
     });
   }
 
-  async getGenerationsByStyle(style: string): Promise<GenerationRecord[]> {
+  async getGenerationCount(): Promise<number> {
     await this.init();
     
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([this.storeName], 'readonly');
       const store = transaction.objectStore(this.storeName);
-      const index = store.index('style');
-      const request = index.getAll(style);
+      const request = store.count();
       
       request.onsuccess = () => {
-        const results = request.result.sort((a, b) => b.timestamp - a.timestamp);
+        console.log(`Generation count: ${request.result}`);
+        resolve(request.result);
+      };
+      
+      request.onerror = () => {
+        console.error('Error getting generation count:', request.error);
+        reject(new Error('Could not get generation count from database'));
+      };
+    });
+  }
+
+  async searchGenerations(query: string): Promise<GenerationRecord[]> {
+    await this.init();
+    
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction([this.storeName], 'readonly');
+      const store = transaction.objectStore(this.storeName);
+      const request = store.getAll();
+      
+      request.onsuccess = () => {
+        const results = request.result.filter(record => 
+          record.name.toLowerCase().includes(query.toLowerCase()) ||
+          record.style.toLowerCase().includes(query.toLowerCase()) ||
+          record.level.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        console.log(`Found ${results.length} generations matching '${query}'`);
         resolve(results);
       };
       
       request.onerror = () => {
-        console.error('Error fetching generations by style:', request.error);
-        reject(new Error('Could not fetch generations by style'));
+        console.error('Error searching generations:', request.error);
+        reject(new Error('Could not search generations in database'));
       };
     });
   }
 }
 
-// 导出单例实例
+// Export singleton instance
 export const propellaDB = new PropellaDB();
-export type { GenerationRecord };
 
-// 兼容性检查
-export const isIndexedDBSupported = (): boolean => {
+// Compatibility check
+export function isIndexedDBSupported(): boolean {
   return typeof window !== 'undefined' && 'indexedDB' in window;
-};
+}
 
-// 迁移 localStorage 数据到 IndexedDB
-export const migrateFromLocalStorage = async (): Promise<void> => {
-  if (!isIndexedDBSupported()) return;
-  
+// Migrate localStorage data to IndexedDB
+export async function migrateFromLocalStorage(): Promise<void> {
+  if (!isIndexedDBSupported()) {
+    console.warn('IndexedDB not supported, skipping migration');
+    return;
+  }
+
   try {
     const localHistory = localStorage.getItem('history');
     if (localHistory) {
-      const oldData = JSON.parse(localHistory);
-      
-      for (const item of oldData) {
-        await propellaDB.addGeneration({
-          name: item.name || 'Unknown',
-          style: item.style || 'pixel',
-          level: item.level || 'normal',
-          imageUrl: item.url || item.imageUrl
-        });
+      const data = JSON.parse(localHistory);
+      if (Array.isArray(data) && data.length > 0) {
+        console.log(`Migrating ${data.length} records from localStorage to IndexedDB`);
+        
+        for (const record of data) {
+          try {
+            await propellaDB.addGeneration({
+              name: record.name || '',
+              style: record.style || '',
+              level: record.level || '',
+              imageUrl: record.imageUrl || '',
+              prompt: record.prompt,
+              model: record.model,
+              size: record.size
+            });
+          } catch (error) {
+            console.warn('Failed to migrate record:', record, error);
+          }
+        }
+        
+        // Clear old data after successful migration
+        localStorage.removeItem('history');
+        console.log('Migration completed successfully');
       }
-      
-      // 清除旧数据
-      localStorage.removeItem('history');
-      console.log('Successfully migrated localStorage data to IndexedDB');
     }
   } catch (error) {
-    console.error('Error migrating localStorage data:', error);
+    console.error('Migration failed:', error);
   }
-};
+}
+
+export type { GenerationRecord };
 

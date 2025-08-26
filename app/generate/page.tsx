@@ -10,6 +10,7 @@ import { useDebounce, usePerformanceMonitor } from '@/components/VirtualGrid';
 import ImageCard, { ImageGrid } from '@/components/ImageCard';
 import { SkeletonCard, SkeletonLoader } from '@/components/Skeleton';
 import ImageDetailModal from '@/components/ImageDetailModal';
+import { t } from '@/lib/i18n';
 
 function GeneratePageContent() {
   usePerformanceMonitor('GeneratePage');
@@ -23,19 +24,19 @@ function GeneratePageContent() {
   const [generations, setGenerations] = useState<GenerationRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 自动隐藏功能状态
+  // Auto-hide functionality state
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // 图像详情模态框状态
+  // Image detail modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GenerationRecord | null>(null);
 
-  // 防抖搜索
+  // Debounced search
   useDebounce(itemName, 300);
 
-  // 处理URL参数 - 支持从其他页面传递提示词和参数
+  // Handle URL parameters - support passing prompts and parameters from other pages
   useEffect(() => {
     const prompt = searchParams.get('prompt');
     const urlStyle = searchParams.get('style');
@@ -52,19 +53,19 @@ function GeneratePageContent() {
     }
   }, [searchParams]);
 
-  // 滚动监听 - 自动隐藏顶部输入区
+  // Scroll listener - auto-hide top input area
   useEffect(() => {
     const handleScroll = () => {
       if (!scrollContainerRef.current) return;
       
       const currentScrollY = scrollContainerRef.current.scrollTop;
-      const scrollThreshold = 100; // 滚动阈值
+      const scrollThreshold = 100; // Scroll threshold
       
       if (currentScrollY > lastScrollY && currentScrollY > scrollThreshold) {
-        // 向下滚动且超过阈值 - 隐藏
+        // Scrolling down and past threshold - hide
         setIsHeaderVisible(false);
       } else if (currentScrollY < lastScrollY || currentScrollY <= scrollThreshold) {
-        // 向上滚动或回到顶部 - 显示
+        // Scrolling up or back to top - show
         setIsHeaderVisible(true);
       }
       
@@ -78,14 +79,14 @@ function GeneratePageContent() {
     }
   }, [lastScrollY]);
 
-  // 加载历史记录
+  // Load history records
   useEffect(() => {
     if (status === 'authenticated') {
       loadGenerations();
     }
   }, [status]);
 
-  // 提前 return 只做渲染，hooks 必须在 return 之前全部调用
+  // Early return for rendering only, hooks must be called before return
   if (status === 'loading') {
     return <SkeletonLoader />;
   }
@@ -112,24 +113,24 @@ function GeneratePageContent() {
         }
       }
 
-      // 验证和清理数据 - 确保所有记录都有有效的图像URL
+      // Validate and clean data - ensure all records have valid image URLs
       const validRecords = records.filter(record => {
         const hasValidUrl = record.imageUrl &&
           (record.imageUrl.startsWith('http') || record.imageUrl.startsWith('data:'));
 
         if (!hasValidUrl) {
-          console.warn('发现无效的图像记录:', record);
+          console.warn('Found invalid image record:', record);
         }
 
         return hasValidUrl;
       });
 
-      console.log(`加载了 ${validRecords.length} 条有效记录，过滤了 ${records.length - validRecords.length} 条无效记录`);
+      console.log(`Loaded ${validRecords.length} valid records, filtered ${records.length - validRecords.length} invalid records`);
       setGenerations(validRecords);
 
     } catch (error) {
-      console.error('加载历史记录失败:', error);
-      setGenerations([]); // 设置为空数组而不是保持loading状态
+      console.error('Failed to load history records:', error);
+      setGenerations([]); // Set to empty array instead of keeping loading state
     } finally {
       setTimeout(() => setIsLoading(false), 800);
     }
@@ -147,9 +148,9 @@ function GeneratePageContent() {
       });
       
       const data = await response.json();
-      console.log('API响应数据:', data); // 调试日志
+      console.log('API response data:', data); // Debug log
 
-      // 更健壮的图像URL提取逻辑
+      // More robust image URL extraction logic
       let imageUrl = '';
       if (data.success) {
         imageUrl = data.imageUrl ||
@@ -159,12 +160,12 @@ function GeneratePageContent() {
       }
 
       if (data.success && imageUrl) {
-        // 验证URL的有效性
+        // Validate URL validity
         const isValidUrl = imageUrl.startsWith('http') || imageUrl.startsWith('data:');
 
         if (!isValidUrl) {
-          console.error('无效的图像URL:', imageUrl);
-          alert('生成失败: 返回的图像URL无效');
+          console.error('Invalid image URL:', imageUrl);
+          alert('Generation failed: Invalid image URL returned');
           return;
         }
 
@@ -177,7 +178,7 @@ function GeneratePageContent() {
           timestamp: Date.now()
         };
 
-        // 保存到数据库
+        // Save to database
         try {
           if (isIndexedDBSupported()) {
             await propellaDB.addGeneration({
@@ -192,59 +193,59 @@ function GeneratePageContent() {
             localStorage.setItem('history', JSON.stringify(currentHistory));
           }
         } catch (error) {
-          console.error('保存到数据库失败:', error);
-          // 不阻止UI更新
+          console.error('Failed to save to database:', error);
+          // Don't block UI update
         }
 
-        // 更新UI状态
+        // Update UI state
         setGenerations(prev => [newGeneration, ...prev]);
         setItemName('');
 
-        // 生成完成后显示头部
+        // Show header after generation completes
         setIsHeaderVisible(true);
 
-        console.log('新生成记录已添加:', newGeneration);
+        console.log('New generation record added:', newGeneration);
       } else {
-        console.error('生成失败，API响应:', data);
-        alert('生成失败: ' + (data.error || '未知错误'));
+        console.error('Generation failed, API response:', data);
+        alert('Generation failed: ' + (data.error || 'Unknown error'));
       }
     } catch (error) {
       console.error('Generation failed:', error);
-      alert('网络错误，请重试');
+      alert('Network error, please try again');
     } finally {
       setIsGenerating(false);
     }
   };
 
-  // 快速回到顶部
+  // Quick scroll to top
   const scrollToTop = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
-  // 处理图像卡片点击 - 打开详情模态框
+  // Handle image card click - open detail modal
   const handleImageClick = (generation: GenerationRecord) => {
     setSelectedImage(generation);
     setIsModalOpen(true);
   };
 
-  // 关闭模态框
+  // Close modal
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedImage(null);
   };
 
-  // 使用提示词 - 从模态框复制到输入框
+  // Use prompt - copy from modal to input field
   const handleUsePrompt = (prompt: string) => {
     setItemName(prompt);
-    setIsHeaderVisible(true); // 确保头部可见
+    setIsHeaderVisible(true); // Ensure header is visible
   };
 
   return (
     <PageLoadAnimation>
       <div className="flex flex-col h-screen bg-surface-primary relative">
-      {/* 顶部工具栏 - 现代化设计 */}
+      {/* Top toolbar - modern design */}
       <header
         id="prompt-controls"
         className={`sticky top-0 z-30 glass border-b border-border-primary transition-all duration-300 ease-in-out ${
@@ -252,11 +253,11 @@ function GeneratePageContent() {
         }`}
       >
         <div className="px-4 sm:px-6 py-4 sm:py-6">
-          {/* 页面标题区域 */}
+          {/* Page title area */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
             <div className="space-y-1">
-              <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">Create</h1>
-              <p className="text-text-secondary text-sm sm:text-base">Generate amazing game items with AI</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">{t('createPage.title')}</h1>
+              <p className="text-text-secondary text-sm sm:text-base">{t('createPage.subtitle')}</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 px-3 py-2 bg-surface-secondary/50 rounded-xl border border-border-primary">
@@ -286,14 +287,14 @@ function GeneratePageContent() {
             </div>
           </div>
 
-          {/* 提示词输入区 - 现代化设计 */}
+          {/* Prompt input area - modern design */}
           <div className="space-y-6">
-            {/* 主要输入框 */}
+            {/* Main input field */}
             <div className="relative group">
               <textarea
                 value={itemName}
                 onChange={(e) => setItemName(e.target.value)}
-                placeholder="Describe your item in detail... e.g., 'a legendary sword with glowing blue runes and ancient engravings'"
+                placeholder={t('createPage.placeholder')}
                 className="textarea h-32 text-base placeholder:text-text-tertiary resize-none"
                 disabled={isGenerating}
                 maxLength={500}
@@ -316,11 +317,11 @@ function GeneratePageContent() {
               </div>
             </div>
 
-            {/* 控制选项 - 响应式布局 */}
+            {/* Control options - responsive layout */}
             <div className="space-y-4">
-              {/* 移动端：垂直布局，桌面端：网格布局 */}
+              {/* Mobile: vertical layout, Desktop: grid layout */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* 风格选择 */}
+                {/* Style selection */}
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-text-secondary">Art Style</label>
                   <select
@@ -337,7 +338,7 @@ function GeneratePageContent() {
                   </select>
                 </div>
 
-                {/* 稀有度选择 */}
+                {/* Rarity level selection */}
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-text-secondary">Rarity Level</label>
                   <select
@@ -353,7 +354,7 @@ function GeneratePageContent() {
                   </select>
                 </div>
 
-                {/* 生成按钮 - 在移动端占满宽度 */}
+                {/* Generate button - full width on mobile */}
                 <div className="space-y-2 sm:col-span-2 lg:col-span-1">
                   <label className="text-sm font-semibold text-text-secondary">Action</label>
                   <PulseButton
@@ -373,7 +374,7 @@ function GeneratePageContent() {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
-                        Generate
+                        {t('createPage.generateButton')}
                       </>
                     )}
                   </PulseButton>
@@ -384,7 +385,7 @@ function GeneratePageContent() {
         </div>
       </header>
 
-      {/* 主内容区 - 现代化网格布局 */}
+      {/* Main content area - modern grid layout */}
       <div
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto scrollbar-hide"
@@ -401,7 +402,7 @@ function GeneratePageContent() {
             ) : generations.length === 0 ? (
               <div className="text-center py-20">
                 <div className="max-w-lg mx-auto space-y-8">
-                  {/* 空状态图标 */}
+                  {/* Empty state icon */}
                   <div className="relative">
                     <div className="w-24 h-24 mx-auto bg-gradient-to-br from-primary-500/20 to-primary-600/20 rounded-3xl flex items-center justify-center border border-border-primary">
                       <svg className="w-12 h-12 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -411,7 +412,7 @@ function GeneratePageContent() {
                     <div className="absolute -inset-4 bg-gradient-to-br from-primary-500/10 to-primary-600/10 rounded-3xl -z-10 animate-pulse"></div>
                   </div>
 
-                  {/* 空状态文本 */}
+                  {/* Empty state text */}
                   <div className="space-y-4">
                     <h3 className="text-2xl font-bold text-text-primary">
                       Ready to create something amazing?
@@ -422,7 +423,7 @@ function GeneratePageContent() {
                     </p>
                   </div>
 
-                  {/* 示例标签 */}
+                  {/* Example tags */}
                   <div className="flex flex-wrap gap-3 justify-center">
                     {['Weapons', 'Armor', 'Potions', 'Artifacts', 'Tools', 'Accessories'].map((tag) => (
                       <span key={tag} className="px-4 py-2 bg-surface-secondary border border-border-primary rounded-xl text-text-secondary hover:text-text-primary hover:border-border-hover transition-all duration-200 cursor-pointer">
@@ -434,7 +435,7 @@ function GeneratePageContent() {
               </div>
             ) : (
               <div className="space-y-6">
-                {/* 结果统计 */}
+                {/* Results statistics */}
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold text-text-primary">
                     Your Creations ({generations.length})
@@ -455,7 +456,7 @@ function GeneratePageContent() {
                   </div>
                 </div>
 
-                {/* 结果网格 - 使用新的ImageCard组件 */}
+                {/* Results grid - using new ImageCard component */}
                 <ImageGrid>
                   {generations.map((gen, index) => (
                     <ImageCard
@@ -467,7 +468,7 @@ function GeneratePageContent() {
                       onClick={() => handleImageClick(gen)}
                       onLike={(liked) => {
                         console.log(`Image ${gen.id} ${liked ? 'liked' : 'unliked'}`);
-                        // 这里可以添加保存喜欢状态的逻辑
+                        // Here you can add logic to save like status
                       }}
                       onDownload={() => {
                         const link = document.createElement('a');
@@ -484,7 +485,7 @@ function GeneratePageContent() {
         </div>
       </div>
 
-      {/* 浮动操作按钮 - 响应式设计 */}
+      {/* Floating action buttons - responsive design */}
       {!isHeaderVisible && (
         <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col gap-3">
           <button
@@ -509,7 +510,7 @@ function GeneratePageContent() {
         </div>
       )}
 
-      {/* 图像详情模态框 */}
+      {/* Image detail modal */}
       <ImageDetailModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -529,7 +530,7 @@ export default function GeneratePage() {
   );
 }
 
-// 旧的组件已被新的ImageCard组件替代
+// Old components have been replaced by new ImageCard components
 
 
 

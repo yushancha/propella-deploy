@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
+import { t } from '../lib/i18n';
 
 export default function HomePage() {
   const { data: session } = useSession();
@@ -36,9 +37,9 @@ export default function HomePage() {
             <div className="text-xl font-semibold text-primary">PropGen.AI</div>
             {session ? (
               <div className="flex items-center space-x-4">
-                <Link href="/generate" className="text-foreground hover:text-hover dark:text-foreground-dark dark:hover:text-hover-dark">Generate</Link>
+                <Link href="/generate" className="text-foreground hover:text-hover dark:text-foreground-dark dark:hover:text-hover-dark">{t('navigation.create')}</Link>
                 <Link href="/history" className="text-foreground hover:text-hover dark:text-foreground-dark dark:hover:text-hover-dark">History</Link>
-                <Link href="/settings" className="text-foreground hover:text-hover dark:text-foreground-dark dark:hover:text-hover-dark">Settings</Link>
+                <Link href="/settings" className="text-foreground hover:text-hover dark:text-foreground-dark dark:hover:text-hover-dark">{t('settings.title')}</Link>
                 <img src={session.user?.image || ''} alt="Avatar" className="w-8 h-8 rounded-full" />
               </div>
             ) : (
@@ -46,24 +47,24 @@ export default function HomePage() {
                 onClick={() => signIn("google")}
                 className="bg-primary text-foreground-dark px-4 py-2 rounded-lg hover:bg-hover dark:bg-primary dark:text-foreground-dark dark:hover:bg-hover-dark transition-colors"
               >
-                Sign in
+                {t('auth.signIn')}
               </button>
             )}
           </div>
         </div>
       </nav>
 
-      {/* 添加顶部间距以避免内容被固定导航栏遮挡 */}
+      {/* Add top spacing to avoid content being hidden by fixed navigation bar */}
       <div className="pt-16">
-        {/* 其余页面内容保持不变 */}
+        {/* Rest of page content remains unchanged */}
         <div className="relative overflow-hidden">
           {/* Hero Section */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
             <h1 className="text-4xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-hover bg-clip-text text-transparent">
-              AI Game Props Generator
+              {t('landing.hero.title')}
             </h1>
             <p className="text-xl text-foreground/80 dark:text-foreground-dark/80 mb-8 max-w-3xl mx-auto">
-              Create stunning game assets with AI. From weapons to armor, generate professional-quality props in seconds.
+              {t('landing.hero.subtitle')}
             </p>
 
             {/* CTA Button */}
@@ -73,14 +74,14 @@ export default function HomePage() {
                   href="/generate"
                   className="inline-flex items-center px-8 py-4 bg-primary text-foreground-dark rounded-xl font-medium hover:bg-hover dark:bg-primary dark:text-foreground-dark dark:hover:bg-hover-dark transition-colors shadow-lg"
                 >
-                  Start Creating →
+                  {t('landing.hero.cta')} →
                 </Link>
               ) : (
                 <Link
                   href="/generate"
                   className="inline-flex items-center px-8 py-4 bg-primary text-foreground-dark rounded-xl font-medium hover:bg-hover dark:bg-primary dark:text-foreground-dark dark:hover:bg-hover-dark transition-colors shadow-lg"
                 >
-                  Start Creating →
+                  {t('landing.hero.cta')} →
                 </Link>
               )}
             </div>

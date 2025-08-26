@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from 'react';
-// import { FixedSizeGrid as Grid } from 'react-window'; // 注释掉，因为依赖未安装
+// import { FixedSizeGrid as Grid } from 'react-window'; // Commented out because dependency not installed
 import { GenerationRecord } from '@/lib/indexedDB';
 import ImageCard from './ImageCard';
 
@@ -26,8 +26,8 @@ interface GridCellProps {
 }
 
 /**
- * 虚拟化图像网格组件
- * 用于高性能渲染大量图像，支持懒加载和无限滚动
+ * Virtualized image grid component
+ * For high-performance rendering of large numbers of images, supports lazy loading and infinite scrolling
  */
 export default function VirtualizedImageGrid({
   items,
@@ -40,17 +40,17 @@ export default function VirtualizedImageGrid({
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [columnsCount, setColumnsCount] = useState(4);
 
-  // 响应式列数计算
+  // Responsive column count calculation
   const calculateColumns = (width: number) => {
     if (width < 640) return 2;      // sm
     if (width < 768) return 3;      // md
     if (width < 1024) return 4;     // lg
     if (width < 1280) return 5;     // xl
     if (width < 1536) return 6;     // 2xl
-    return 8;                       // 超大屏幕
+    return 8;                       // Extra large screens
   };
 
-  // 监听容器尺寸变化
+  // Listen for container size changes
   useEffect(() => {
     const updateSize = () => {
       if (containerRef.current) {
@@ -66,17 +66,17 @@ export default function VirtualizedImageGrid({
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  // 计算网格参数
+  // Calculate grid parameters
   const itemWidth = useMemo(() => {
     const gap = 16; // 4 * 4px (gap-4)
     const totalGaps = (columnsCount - 1) * gap;
     return Math.floor((containerSize.width - totalGaps) / columnsCount);
   }, [containerSize.width, columnsCount]);
 
-  const itemHeight = itemWidth; // 正方形图片
+  const itemHeight = itemWidth; // Square images
   const rowCount = Math.ceil(items.length / columnsCount);
 
-  // 网格单元格渲染函数
+  // Grid cell render function
   const GridCell = ({ columnIndex, rowIndex, style, data }: GridCellProps) => {
     const { items, columnsCount, onImageClick, onImageLike, onImageDownload } = data;
     const itemIndex = rowIndex * columnsCount + columnIndex;
@@ -102,30 +102,41 @@ export default function VirtualizedImageGrid({
     );
   };
 
-  // 如果容器尺寸还未确定，显示加载状态
+  // If container size is not yet determined, show loading state
   if (containerSize.width === 0) {
     return (
-      <div ref={containerRef} className={`w-full h-96 ${className}`}>
-        <div className="flex items-center justify-center h-full">
-          <div className="loading-spinner w-8 h-8"></div>
-        </div>
+      <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 ${className}`}>
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+        ))}
       </div>
     );
   }
 
+  // Grid component temporarily disabled because react-window dependency not installed
   return (
-    <div ref={containerRef} className={`w-full ${className}`}>
-      {/* Grid组件暂时禁用，因为react-window依赖未安装 */}
-      <div className="text-center py-8 text-text-secondary">
-        Virtual grid requires react-window dependency
-      </div>
+    <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 ${className}`}>
+      {items.map((item, index) => (
+        <div key={item.id} className="p-2">
+          <ImageCard
+            imageUrl={item.imageUrl}
+            alt={item.name || 'Generated artwork'}
+            index={index}
+            priority={index < 16}
+            onClick={() => onImageClick(item)}
+            onLike={(liked) => onImageLike?.(item, liked)}
+            onDownload={() => onImageDownload?.(item)}
+            className="h-full"
+          />
+        </div>
+      ))}
     </div>
   );
 }
 
 /**
- * 自适应虚拟化网格
- * 根据容器大小自动调整高度
+ * Auto-sized virtual grid
+ * Adjusts height automatically based on container size
  */
 export function AutoSizedVirtualGrid({
   items,
@@ -140,8 +151,8 @@ export function AutoSizedVirtualGrid({
   useEffect(() => {
     const updateHeight = () => {
       const viewportHeight = window.innerHeight;
-      const headerHeight = 200; // 估算头部高度
-      const footerHeight = 100; // 估算底部高度
+      const headerHeight = 200; // Estimate header height
+      const footerHeight = 100; // Estimate footer height
       const availableHeight = viewportHeight - headerHeight - footerHeight;
       
       setContainerHeight(Math.min(maxHeight, Math.max(400, availableHeight)));
@@ -167,8 +178,8 @@ export function AutoSizedVirtualGrid({
 }
 
 /**
- * 分页虚拟化网格
- * 结合分页和虚拟化，适合超大数据集
+ * Paginated virtual grid
+ * Combines pagination and virtualization, suitable for large data sets
  */
 export function PaginatedVirtualGrid({
   items,
@@ -187,7 +198,7 @@ export function PaginatedVirtualGrid({
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    // 滚动到顶部
+    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -200,7 +211,7 @@ export function PaginatedVirtualGrid({
         onImageDownload={onImageDownload}
       />
       
-      {/* 分页控件 */}
+      {/* Pagination controls */}
       {totalPages > 1 && (
         <div className="mt-8 flex justify-center items-center gap-4">
           <button
@@ -250,7 +261,7 @@ export function PaginatedVirtualGrid({
         </div>
       )}
       
-      {/* 页面信息 */}
+      {/* Page information */}
       <div className="mt-4 text-center text-sm text-text-tertiary">
         Showing {startIndex + 1}-{Math.min(endIndex, items.length)} of {items.length} items
       </div>
@@ -259,8 +270,8 @@ export function PaginatedVirtualGrid({
 }
 
 /**
- * 懒加载图像网格
- * 仅在图像进入视口时才开始加载
+ * Lazy loading image grid
+ * Only begins loading when images enter the viewport
  */
 export function LazyImageGrid({
   items,

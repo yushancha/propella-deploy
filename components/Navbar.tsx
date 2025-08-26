@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import LanguageSelector from './LanguageSelector';
 import SettingsModal from './SettingsModal';
+import { t } from '../lib/i18n';
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -23,10 +24,10 @@ export default function Navbar() {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-6">
             <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Home
+              {t('navigation.home')}
             </Link>
             <Link href="/generate" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Generate
+              {t('navigation.create')}
             </Link>
             {session && (
               <Link href="/batch-generate" className="text-gray-700 hover:text-blue-600 transition-colors">
@@ -34,14 +35,14 @@ export default function Navbar() {
               </Link>
             )}
             <Link href="/pricing" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Pricing
+              {t('navigation.subscribe')}
             </Link>
             {session && (
               <Link href="/history" className="text-gray-700 hover:text-blue-600 transition-colors">
                 History
               </Link>
             )}
-            {/* 设置按钮 */}
+            {/* Settings button */}
             <button 
               onClick={() => setIsSettingsOpen(true)}
               className="text-gray-700 hover:text-blue-600 transition-colors flex items-center"
@@ -50,24 +51,24 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span className="ml-1">Settings</span>
+              <span className="ml-1">{t('settings.title')}</span>
             </button>
             {session ? (
               <button
                 onClick={() => signOut()}
                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors text-left"
               >
-                Sign Out
+                {t('auth.logout')}
               </button>
             ) : (
               <Link href="/login" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors text-center">
-                Sign In
+                {t('auth.signIn')}
               </Link>
             )}
             {/* Language Selector */}
             <LanguageSelector onChange={(lang) => {
               console.log(`Language changed to: ${lang}`);
-              // 这里可以添加语言切换的全局状态更新
+              // Here you can add global state update for language switching
             }} />
           </div>
 
@@ -91,10 +92,10 @@ export default function Navbar() {
           <div className="md:hidden py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-3">
               <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors px-2 py-1">
-                Home
+                {t('navigation.home')}
               </Link>
               <Link href="/generate" className="text-gray-700 hover:text-blue-600 transition-colors px-2 py-1">
-                Generate
+                {t('navigation.create')}
               </Link>
               {session && (
                 <Link href="/batch-generate" className="text-gray-700 hover:text-blue-600 transition-colors px-2 py-1">
@@ -102,14 +103,14 @@ export default function Navbar() {
                 </Link>
               )}
               <Link href="/pricing" className="text-gray-700 hover:text-blue-600 transition-colors px-2 py-1">
-                Pricing
+                {t('navigation.subscribe')}
               </Link>
               {session && (
                 <Link href="/history" className="text-gray-700 hover:text-blue-600 transition-colors px-2 py-1">
                   History
                 </Link>
               )}
-              {/* 移动端设置按钮 */}
+              {/* Mobile settings button */}
               <button 
                 onClick={() => setIsSettingsOpen(true)}
                 className="text-gray-700 hover:text-blue-600 transition-colors px-2 py-1 text-left flex items-center"
@@ -118,18 +119,18 @@ export default function Navbar() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                Settings
+                {t('settings.title')}
               </button>
               {session ? (
                 <button
                   onClick={() => signOut()}
                   className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
                 >
-                  Sign Out
+                  {t('auth.logout')}
                 </button>
               ) : (
                 <Link href="/login" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
-                  Sign In
+                  {t('auth.signIn')}
                 </Link>
               )}
             </div>
@@ -137,7 +138,7 @@ export default function Navbar() {
         )}
       </div>
 
-      {/* 设置模态窗口 */}
+      {/* Settings modal */}
       <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </nav>
   );

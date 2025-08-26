@@ -1,8 +1,8 @@
-// 性能监控和优化工具
+// Performance monitoring and optimization tools
 
 import * as React from 'react';
 
-// 性能指标收集器
+// Performance metrics collector
 class PerformanceCollector {
   private metrics: Map<string, number[]> = new Map();
   private observers: PerformanceObserver[] = [];
@@ -12,7 +12,7 @@ class PerformanceCollector {
   }
 
   private initObservers() {
-    // 监控长任务
+    // Monitor long tasks
     if ('PerformanceObserver' in window) {
       const longTaskObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
@@ -26,10 +26,10 @@ class PerformanceCollector {
         longTaskObserver.observe({ entryTypes: ['longtask'] });
         this.observers.push(longTaskObserver);
       } catch (e) {
-        // longtask 可能不被支持
+        // longtask may not be supported
       }
 
-      // 监控布局偏移
+      // Monitor layout shifts
       const layoutShiftObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if ((entry as any).value > 0.1) {
@@ -42,12 +42,12 @@ class PerformanceCollector {
         layoutShiftObserver.observe({ entryTypes: ['layout-shift'] });
         this.observers.push(layoutShiftObserver);
       } catch (e) {
-        // layout-shift 可能不被支持
+        // layout-shift may not be supported
       }
     }
   }
 
-  // 记录性能指标
+  // Record performance metrics
   recordMetric(name: string, value: number) {
     if (!this.metrics.has(name)) {
       this.metrics.set(name, []);
@@ -55,7 +55,7 @@ class PerformanceCollector {
     this.metrics.get(name)!.push(value);
   }
 
-  // 获取性能统计
+  // Get performance statistics
   getStats(name: string) {
     const values = this.metrics.get(name) || [];
     if (values.length === 0) return null;
@@ -72,7 +72,7 @@ class PerformanceCollector {
     };
   }
 
-  // 清理资源
+  // Cleanup resources
   cleanup() {
     this.observers.forEach(observer => observer.disconnect());
     this.metrics.clear();
@@ -81,7 +81,7 @@ class PerformanceCollector {
 
 export const performanceCollector = new PerformanceCollector();
 
-// 性能计时器
+// Performance timer
 export class PerformanceTimer {
   private startTime: number;
   private name: string;
@@ -98,7 +98,7 @@ export class PerformanceTimer {
   }
 }
 
-// 性能装饰器
+// Performance decorator
 export function measurePerformance(name: string) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
@@ -124,7 +124,7 @@ export function measurePerformance(name: string) {
   };
 }
 
-// 内存使用监控
+// Memory usage monitoring
 export function getMemoryUsage() {
   if ('memory' in performance) {
     const memory = (performance as any).memory;
@@ -137,7 +137,7 @@ export function getMemoryUsage() {
   return null;
 }
 
-// FPS 监控
+// FPS monitoring
 export class FPSMonitor {
   private frameCount = 0;
   private lastTime = performance.now();
@@ -177,19 +177,19 @@ export class FPSMonitor {
   }
 }
 
-// 资源加载监控
+// Resource loading monitoring
 export function monitorResourceLoading() {
   if ('PerformanceObserver' in window) {
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         const resource = entry as PerformanceResourceTiming;
         
-        // 检查慢资源
+        // Check for slow resources
         if (resource.duration > 1000) {
           console.warn(`Slow resource: ${resource.name} took ${resource.duration}ms`);
         }
         
-        // 检查大资源
+        // Check for large resources
         if (resource.transferSize > 1024 * 1024) { // 1MB
           console.warn(`Large resource: ${resource.name} is ${Math.round(resource.transferSize / 1024)}KB`);
         }
@@ -202,7 +202,7 @@ export function monitorResourceLoading() {
   return null;
 }
 
-// 代码分割和懒加载工具
+// Code splitting and lazy loading tools
 export function createLazyComponent<T extends React.ComponentType<any>>(
   importFunc: () => Promise<{ default: T }>,
   fallback?: React.ComponentType
@@ -220,7 +220,7 @@ export function createLazyComponent<T extends React.ComponentType<any>>(
   return LazyWrapper;
 }
 
-// 图片预加载管理器
+// Image preloading manager
 export class ImagePreloader {
   private cache = new Set<string>();
   private loading = new Set<string>();
@@ -269,13 +269,13 @@ export class ImagePreloader {
 
 export const imagePreloader = new ImagePreloader();
 
-// Web Workers 工具
+// Web Workers tools
 export function createWorker(workerFunction: Function): Worker {
   const blob = new Blob([`(${workerFunction.toString()})()`], { type: 'application/javascript' });
   return new Worker(URL.createObjectURL(blob));
 }
 
-// 性能报告生成器
+// Performance report generator
 export function generatePerformanceReport() {
   const report = {
     timestamp: new Date().toISOString(),
@@ -285,7 +285,7 @@ export function generatePerformanceReport() {
     resources: performance.getEntriesByType('resource').length
   };
 
-  // 收集所有性能指标
+  // Collect all performance metrics
   const metricNames = ['component-render', 'api-call', 'image-load'];
   metricNames.forEach(name => {
     const stats = performanceCollector.getStats(name);
@@ -297,7 +297,7 @@ export function generatePerformanceReport() {
   return report;
 }
 
-// 性能优化建议
+// Performance optimization recommendations
 export function getPerformanceRecommendations() {
   const recommendations = [];
   const memory = getMemoryUsage();

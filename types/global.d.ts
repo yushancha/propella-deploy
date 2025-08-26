@@ -21,7 +21,7 @@ declare module 'next/navigation' {
   export * from 'next/navigation';
 }
 
-// 全局类型声明
+// Global type declarations
 declare global {
   namespace JSX {
     interface IntrinsicElements {

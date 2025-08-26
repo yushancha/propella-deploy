@@ -9,7 +9,7 @@ import { ThemeProvider } from "../contexts/ThemeContext";
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  // 不需要侧边栏的页面
+  // Pages that don't need sidebar
   const noSidebarPages = ['/login', '/auth/error', '/', '/landing'];
   const showSidebar = !noSidebarPages.includes(pathname);
 
@@ -22,10 +22,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     <SessionProvider>
       <ThemeProvider>
         <div className="flex min-h-screen bg-bg-primary" id="app-container">
-          {/* 左侧导航栏 */}
+          {/* Left navigation sidebar */}
           {showSidebar && <LeftSidebar />}
 
-          {/* 主内容区 */}
+          {/* Main content area */}
           <main
             className={`flex-1 min-h-screen transition-all duration-300 ease-in-out ${
               showSidebar ? 'lg:ml-64' : 'ml-0'
@@ -33,7 +33,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             id="main-content"
           >
             <div className="relative min-h-screen">
-              {/* 移动端顶部间距 */}
+              {/* Mobile top spacing */}
               {showSidebar && <div className="h-16 lg:hidden" />}
               {children}
             </div>

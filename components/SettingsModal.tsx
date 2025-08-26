@@ -19,7 +19,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [quality, setQuality] = useState('high');
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // 焦点陷阱和键盘事件处理
+  // Focus trap and keyboard event handling
   useEffect(() => {
     if (!isOpen) return;
 
@@ -48,10 +48,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     document.addEventListener('keydown', handleEscape);
     document.addEventListener('keydown', handleFocusTrap);
     
-    // 防止背景滚动
+    // Prevent background scrolling
     document.body.style.overflow = 'hidden';
     
-    // 延迟聚焦以确保模态框已渲染
+    // Delay focus to ensure modal is rendered
     setTimeout(() => {
       const closeButton = document.querySelector('.modal-close-btn') as HTMLElement;
       closeButton?.focus();
@@ -65,7 +65,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     };
   }, [isOpen, onClose]);
 
-  // 加载设置
+  // Load settings
   useEffect(() => {
     if (isOpen) {
       const savedNotifications = localStorage.getItem('notifications') === 'true';
@@ -126,7 +126,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     saveSettings();
   }, [notifications, autoSave, quality]);
 
-  // 关闭动画
+  // Close animation
   const handleClose = () => {
     setIsAnimating(false);
     setTimeout(onClose, 200);
@@ -135,10 +135,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   if (!isOpen) return null;
 
   const menuItems = [
-    { id: 'general', label: '通用', icon: '⚙️' },
-    { id: 'personalization', label: '个性化', icon: '🎨' },
-    { id: 'data-controls', label: '数据控制', icon: '🔒' },
-    { id: 'about', label: '关于', icon: 'ℹ️' },
+    { id: 'general', label: t('settings.tabs.general'), icon: '⚙️' },
+    { id: 'personalization', label: t('settings.tabs.personalization'), icon: '🎨' },
+    { id: 'data-controls', label: t('settings.tabs.dataControls'), icon: '🔒' },
+    { id: 'about', label: t('settings.tabs.about'), icon: 'ℹ️' },
   ];
 
   return (
@@ -155,10 +155,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       <div className={`modal-container bg-surface-secondary rounded-2xl w-[90%] max-w-4xl max-h-[85vh] relative overflow-hidden border border-border-primary shadow-2xl transition-all duration-300 ${
         isAnimating ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
       }`}>
-        {/* 关闭按钮 */}
+        {/* Close button */}
         <button 
           className="modal-close-btn absolute top-4 right-4 text-text-medium hover:text-text-high text-2xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-tertiary transition-all duration-200 z-10"
-          aria-label="Close settings"
+          aria-label={t('settings.closeAria')}
           onClick={handleClose}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -287,7 +287,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       <span className="text-2xl">🎨</span>
                     </div>
                     <h4 className="text-lg font-semibold text-text-high mb-2">Personalization is coming soon</h4>
-                    <p className="text-text-medium">We’re building more customization options—stay tuned.</p>
+                    <p className="text-text-medium">We're building more customization options—stay tuned.</p>
                   </div>
                 </div>
               </div>
@@ -299,7 +299,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <h3 className="text-2xl font-bold mb-6 text-text-high">{t('settings.tabs.dataControls')}</h3>
                   
                   <div className="space-y-4">
-                    {/* 导出数据 */}
+                    {/* Export data */}
                     <div className="bg-surface-tertiary rounded-xl p-6 border border-border-primary">
                       <h4 className="text-lg font-semibold text-text-high mb-2">{t('settings.data.export')}</h4>
                       <p className="text-sm text-text-medium mb-4">{t('settings.data.exportDescription')}</p>
@@ -314,7 +314,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       </button>
                     </div>
 
-                    {/* 清除数据 */}
+                    {/* Clear data */}
                     <div className="bg-surface-tertiary rounded-xl p-6 border border-red-500/20">
                       <h4 className="text-lg font-semibold text-red-400 mb-2">{t('settings.data.clear')}</h4>
                       <p className="text-sm text-text-medium mb-4">{t('settings.data.clearConfirm')}</p>
@@ -329,7 +329,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       </button>
                     </div>
 
-                    {/* 账户操作 */}
+                    {/* Account actions */}
                     {session && (
                       <div className="bg-surface-tertiary rounded-xl p-6 border border-border-primary">
                         <h4 className="text-lg font-semibold text-text-high mb-2">Account</h4>
@@ -341,7 +341,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                           </svg>
-                          Sign out
+                          {t('auth.logout')}
                         </button>
                       </div>
                     )}

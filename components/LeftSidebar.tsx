@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import SettingsModal from './SettingsModal';
 import { useTheme } from '../contexts/ThemeContext';
+import { t } from '../lib/i18n';
 
 interface NavItem {
   id: string;
@@ -20,7 +21,7 @@ interface NavItem {
   isSubmenuOpen?: boolean;
 }
 
-// Midjourney风格图标组件 - 精确复刻
+// Midjourney-style icon components - precise replication
 const Icons = {
   Explore: ({ className = "" }: { className?: string }) => (
     <svg className={`w-5 h-5 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,16 +46,6 @@ const Icons = {
   Organize: ({ className = "" }: { className?: string }) => (
     <svg className={`w-5 h-5 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14-7H5m14 14H5" />
-    </svg>
-  ),
-  Chat: ({ className = "" }: { className?: string }) => (
-    <svg className={`w-5 h-5 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-    </svg>
-  ),
-  Tasks: ({ className = "" }: { className?: string }) => (
-    <svg className={`w-5 h-5 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
     </svg>
   ),
   Subscribe: ({ className = "" }: { className?: string }) => (
@@ -97,11 +88,6 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   ),
-  ChevronLeft: ({ className = "" }: { className?: string }) => (
-    <svg className={`w-4 h-4 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-    </svg>
-  ),
   Logout: ({ className = "" }: { className?: string }) => (
     <svg className={`w-5 h-5 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" />
@@ -113,26 +99,10 @@ export default function LeftSidebar() {
   const { data: session } = useSession();
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  // 检测屏幕尺寸变化
-  useEffect(() => {
-    const checkScreenSize = () => {
-      if (window.innerWidth < 1024) {
-        setIsCollapsed(true);
-      } else {
-        setIsCollapsed(false);
-      }
-    };
-
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
-
-  // 移动端点击外部关闭侧边栏
+  // Mobile click outside to close sidebar
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const sidebar = document.getElementById('left-sidebar');
@@ -147,18 +117,18 @@ export default function LeftSidebar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Midjourney导航结构 - 精确复刻
-  // Removed chat submenu as Chat feature is deprecated
+  // Midjourney navigation structure - precise replication
+  // Removed chat and tasks submenu as these features are deprecated
 
   const navItems: NavItem[] = [
-    { id: 'explore', label: 'Explore', icon: <Icons.Explore />, href: '/explore' },
-    { id: 'create', label: 'Create', icon: <Icons.Create />, href: '/generate' },
-    { id: 'edit', label: 'Edit', icon: <Icons.Edit />, href: '/edit' },
-    { id: 'personalize', label: 'Personalize', icon: <Icons.Personalize />, href: '/personalize' },
-    { id: 'organize', label: 'Organize', icon: <Icons.Organize />, href: '/organize' },
-    { id: 'subscribe', label: 'Subscribe', icon: <Icons.Subscribe />, href: '/subscribe' },
-    { id: 'help', label: 'Help', icon: <Icons.Help />, href: '/help' },
-    { id: 'updates', label: 'Updates', icon: <Icons.Updates />, href: '/updates', badge: 2 },
+    { id: 'explore', label: t('sidebar.explore'), icon: <Icons.Explore />, href: '/explore' },
+    { id: 'create', label: t('sidebar.create'), icon: <Icons.Create />, href: '/generate' },
+    { id: 'edit', label: t('sidebar.edit'), icon: <Icons.Edit />, href: '/edit' },
+    { id: 'personalize', label: t('sidebar.personalize'), icon: <Icons.Personalize />, href: '/personalize' },
+    { id: 'organize', label: t('sidebar.organize'), icon: <Icons.Organize />, href: '/organize' },
+    { id: 'subscribe', label: t('sidebar.subscribe'), icon: <Icons.Subscribe />, href: '/subscribe' },
+    { id: 'help', label: t('sidebar.help'), icon: <Icons.Help />, href: '/help' },
+    { id: 'updates', label: t('sidebar.updates'), icon: <Icons.Updates />, href: '/updates', badge: 2 },
     {
       id: 'theme-toggle',
       label: theme === 'light' ? 'Dark Mode' : theme === 'dark' ? 'System' : 'Light Mode',
@@ -167,9 +137,9 @@ export default function LeftSidebar() {
     },
   ];
 
-  // 主题切换功能
+  // Theme toggle functionality
   const toggleTheme = () => {
-    // 循环切换主题：light -> dark -> system -> light
+    // Cycle through themes: light -> dark -> system -> light
     const themeOrder: Array<'light' | 'dark' | 'system'> = ['light', 'dark', 'system'];
     const currentIndex = themeOrder.indexOf(theme);
     const nextIndex = (currentIndex + 1) % themeOrder.length;
@@ -188,7 +158,7 @@ export default function LeftSidebar() {
 
   return (
     <>
-      {/* 移动端遮罩层 */}
+      {/* Mobile overlay */}
       {isMobileOpen && (
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 lg:hidden"
@@ -196,7 +166,7 @@ export default function LeftSidebar() {
         />
       )}
 
-      {/* 移动端菜单按钮 */}
+      {/* Mobile menu button */}
       <button
         onClick={() => setIsMobileOpen(true)}
         className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-surface-secondary border border-border-primary rounded-xl text-text-secondary hover:text-text-primary transition-colors"
@@ -206,9 +176,7 @@ export default function LeftSidebar() {
 
       <nav
         id="left-sidebar"
-        className={`fixed left-0 top-0 h-screen bg-surface-primary z-40 transition-all duration-300 ease-in-out ${
-          isCollapsed ? 'w-16' : 'w-64'
-        } ${
+        className={`fixed left-0 top-0 h-screen w-64 bg-surface-primary z-40 transition-all duration-300 ease-in-out ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
@@ -222,25 +190,15 @@ export default function LeftSidebar() {
                 </div>
                 <div className="absolute -inset-1 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl opacity-20 group-hover:opacity-40 transition-opacity duration-300 -z-10"></div>
               </div>
-              {!isCollapsed && (
-                <div className="flex flex-col">
-                  <span className="font-bold text-lg gradient-text">
-                    Propella
-                  </span>
-                  <span className="text-xs text-text-tertiary">
-                    AI Creator
-                  </span>
-                </div>
-              )}
+              <div className="flex flex-col">
+                <span className="font-bold text-lg gradient-text">
+                  Propella
+                </span>
+                <span className="text-xs text-text-tertiary">
+                  AI Creator
+                </span>
+              </div>
             </Link>
-
-            <button
-              onClick={() => setIsCollapsed(!isCollapsed)}
-              className="p-2 rounded-lg hover:bg-surface-secondary transition-all duration-200 text-text-tertiary hover:text-text-primary group"
-              title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            >
-              {isCollapsed ? <Icons.Menu /> : <Icons.ChevronLeft />}
-            </button>
           </div>
 
           {/* Navigation Links */}
@@ -253,7 +211,7 @@ export default function LeftSidebar() {
 
                 return (
                   <div key={item.id} className="relative">
-                    {/* 主导航项 */}
+                    {/* Main navigation item */}
                     {item.href ? (
                       <Link
                         href={item.href}
@@ -262,7 +220,6 @@ export default function LeftSidebar() {
                             ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20'
                             : 'text-text-secondary hover:text-text-primary hover:bg-surface-secondary'
                         }`}
-                        title={isCollapsed ? item.label : undefined}
                       >
                         {/* Active indicator */}
                         {isActive && (
@@ -275,23 +232,21 @@ export default function LeftSidebar() {
                           {item.icon}
                         </span>
 
-                        {!isCollapsed && (
-                          <div className="flex items-center justify-between flex-1 min-w-0">
-                            <span className="truncate">{item.label}</span>
-                            <div className="flex items-center gap-2">
-                              {item.isNew && (
-                                <span className="px-1.5 py-0.5 bg-primary-500 text-white text-xs rounded-full font-medium">
-                                  New
-                                </span>
-                              )}
-                              {item.badge && (
-                                <span className="px-2 py-0.5 bg-error-500 text-white text-xs rounded-full font-medium">
-                                  {item.badge}
-                                </span>
-                              )}
-                            </div>
+                        <div className="flex items-center justify-between flex-1 min-w-0">
+                          <span className="truncate">{item.label}</span>
+                          <div className="flex items-center gap-2">
+                            {item.isNew && (
+                              <span className="px-1.5 py-0.5 bg-primary-500 text-white text-xs rounded-full font-medium">
+                                New
+                              </span>
+                            )}
+                            {item.badge && (
+                              <span className="px-2 py-0.5 bg-error-500 text-white text-xs rounded-full font-medium">
+                                {item.badge}
+                              </span>
+                            )}
                           </div>
-                        )}
+                        </div>
                       </Link>
                     ) : (
                       <button
@@ -301,33 +256,30 @@ export default function LeftSidebar() {
                             ? 'bg-surface-secondary text-text-primary'
                             : 'text-text-secondary hover:text-text-primary hover:bg-surface-secondary'
                         }`}
-                        title={isCollapsed ? item.label : undefined}
                       >
                         <span className="flex-shrink-0 group-hover:scale-110 transition-transform duration-200">
                           {item.icon}
                         </span>
-                        {!isCollapsed && (
-                          <div className="flex items-center justify-between flex-1 min-w-0">
-                            <span className="truncate text-left">{item.label}</span>
-                            <div className="flex items-center gap-2">
-                              {item.badge && (
-                                <span className="px-2 py-0.5 bg-error-500 text-white text-xs rounded-full font-medium">
-                                  {item.badge}
-                                </span>
-                              )}
-                              {item.hasSubmenu && (
-                                <Icons.ChevronDown className={`transition-transform duration-200 ${
-                                  item.isSubmenuOpen ? 'rotate-180' : ''
-                                }`} />
-                              )}
-                            </div>
+                        <div className="flex items-center justify-between flex-1 min-w-0">
+                          <span className="truncate text-left">{item.label}</span>
+                          <div className="flex items-center gap-2">
+                            {item.badge && (
+                              <span className="px-2 py-0.5 bg-error-500 text-white text-xs rounded-full font-medium">
+                                {item.badge}
+                              </span>
+                            )}
+                            {item.hasSubmenu && (
+                              <Icons.ChevronDown className={`transition-transform duration-200 ${
+                                item.isSubmenuOpen ? 'rotate-180' : ''
+                              }`} />
+                            )}
                           </div>
-                        )}
+                        </div>
                       </button>
                     )}
 
-                    {/* 子菜单 */}
-                    {item.hasSubmenu && item.submenu && item.isSubmenuOpen && !isCollapsed && (
+                    {/* Submenu */}
+                    {item.hasSubmenu && item.submenu && item.isSubmenuOpen && (
                       <div className="mt-2 ml-6 space-y-1 border-l border-border-primary pl-4">
                         {item.submenu.map((subItem) => {
                           const isSubActive = subItem.href && pathname === subItem.href;
@@ -360,34 +312,30 @@ export default function LeftSidebar() {
           {/* Bottom Section */}
           <div className="px-4 pb-4 space-y-4">
             {/* Quick Actions */}
-            {!isCollapsed && (
-              <div className="space-y-3">
-                <div className="text-xs font-semibold text-text-tertiary uppercase tracking-wider px-3">
-                  Quick Actions
-                </div>
-                <div className="space-y-1">
-                  <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-all duration-200 group">
-                    <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    <span>New Project</span>
-                  </button>
-                  <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-all duration-200 group">
-                    <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    <span>Export All</span>
-                  </button>
-                </div>
+            <div className="space-y-3">
+              <div className="text-xs font-semibold text-text-tertiary uppercase tracking-wider px-3">
+                Quick Actions
               </div>
-            )}
+              <div className="space-y-1">
+                <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-all duration-200 group">
+                  <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  <span>New Project</span>
+                </button>
+                <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-all duration-200 group">
+                  <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span>Export All</span>
+                </button>
+              </div>
+            </div>
 
             {/* User Profile */}
             {session && (
               <div className="border-t border-border-primary pt-4">
-                <div className={`flex items-center gap-3 p-3 rounded-xl bg-surface-secondary/50 border border-border-primary hover:border-border-hover transition-all duration-200 group ${
-                  isCollapsed ? 'justify-center' : ''
-                }`}>
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-secondary/50 border border-border-primary hover:border-border-hover transition-all duration-200 group">
                   <div className="relative flex-shrink-0">
                     <Image
                       src={session.user?.image || '/default-avatar.png'}
@@ -399,16 +347,14 @@ export default function LeftSidebar() {
                     <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-success-500 rounded-full border-2 border-surface-primary"></div>
                   </div>
 
-                  {!isCollapsed && (
-                    <div className="flex-grow min-w-0">
-                      <div className="text-sm font-semibold text-text-primary truncate">
-                        {session.user?.name || 'User'}
-                      </div>
-                      <div className="text-xs text-text-tertiary truncate">
-                        {session.user?.email}
-                      </div>
+                  <div className="flex-grow min-w-0">
+                    <div className="text-sm font-semibold text-text-primary truncate">
+                      {session.user?.name || 'User'}
                     </div>
-                  )}
+                    <div className="text-xs text-text-tertiary truncate">
+                      {session.user?.email}
+                    </div>
+                  </div>
 
                   <button
                     className="p-2 rounded-lg hover:bg-surface-tertiary transition-all duration-200 text-text-tertiary hover:text-text-primary group/btn"
@@ -424,7 +370,7 @@ export default function LeftSidebar() {
         </div>
       </nav>
 
-      {/* 设置模态框 */}
+      {/* Settings modal */}
       <SettingsModal 
         isOpen={isSettingsOpen} 
         onClose={() => setIsSettingsOpen(false)} 

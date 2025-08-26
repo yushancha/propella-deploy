@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { t } from './i18n';
 
 /**
- * 通用验证规则
+ * Common validation rules
  */
 export const commonValidation = {
   email: z.string().email(t('validation.email')),
@@ -15,7 +15,7 @@ export const commonValidation = {
 };
 
 /**
- * 道具生成请求验证
+ * Item generation request validation
  */
 export const generateItemSchema = z.object({
   prompt: commonValidation.prompt,
@@ -24,7 +24,7 @@ export const generateItemSchema = z.object({
 });
 
 /**
- * 用户注册验证
+ * User registration validation
  */
 export const registerSchema = z.object({
   email: commonValidation.email,
@@ -33,7 +33,7 @@ export const registerSchema = z.object({
 });
 
 /**
- * 通用请求验证函数
+ * Generic request validation function
  */
 export function validateRequest<T>(schema: z.ZodSchema<T>, data: unknown): {
   success: true;

@@ -49,7 +49,8 @@
         "label": "Theme",
         "description": "Choose your interface theme",
         "light": "Light",
-        "dark": "Dark"
+        "dark": "Dark",
+        "system": "System"
       },
       "quality": {
         "label": "Generation Quality",
@@ -75,7 +76,223 @@
       "clearConfirm": "Are you sure you want to clear all history? This cannot be undone.",
       "cleared": "History cleared"
     },
-    "closeAria": "Close settings"
+    "closeAria": "Close settings",
+    "appearance": {
+      "title": "Appearance",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "generation": {
+      "title": "Generation Settings",
+      "defaultQuality": "Default Image Quality",
+      "standard": "Standard",
+      "high": "High",
+      "ultra": "Ultra"
+    },
+    "account": {
+      "title": "Account",
+      "notifications": "Notifications",
+      "notificationsDescription": "Receive notifications when generation is complete and for system updates",
+      "autosave": "Auto-save",
+      "autosaveDescription": "Automatically save generated works to history"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "explore": "Explore",
+    "create": "Create",
+    "edit": "Edit",
+    "personalize": "Personalize",
+    "organize": "Organize",
+    "subscribe": "Subscribe",
+    "help": "Help",
+    "updates": "Updates",
+    "system": "System"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "download": "Download",
+    "upload": "Upload",
+    "view": "View",
+    "details": "Details",
+    "preview": "Preview",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit Fullscreen"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "rememberMe": "Remember Me",
+    "createAccount": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "loginSuccess": "Login successful",
+    "logoutSuccess": "Logout successful",
+    "registrationSuccess": "Registration successful"
+  },
+  "errors": {
+    "general": "Something went wrong",
+    "network": "Network error. Please check your connection.",
+    "timeout": "Request timed out. Please try again.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "forbidden": "Access denied.",
+    "notFound": "The requested resource was not found.",
+    "serverError": "Server error. Please try again later.",
+    "validationError": "Please check your input and try again.",
+    "invalidCredentials": "Invalid email or password.",
+    "emailAlreadyExists": "An account with this email already exists.",
+    "weakPassword": "Password is too weak. Please choose a stronger password."
+  },
+  "messages": {
+    "welcome": "Welcome",
+    "goodbye": "Goodbye",
+    "thankYou": "Thank you",
+    "pleaseWait": "Please wait...",
+    "operationComplete": "Operation completed successfully",
+    "changesSaved": "Changes saved successfully",
+    "itemDeleted": "Item deleted successfully",
+    "itemCreated": "Item created successfully",
+    "itemUpdated": "Item updated successfully"
+  },
+  "imageGeneration": {
+    "title": "AI Image Generation",
+    "subtitle": "Create stunning game assets with artificial intelligence",
+    "promptPlaceholder": "Describe your item in detail...",
+    "promptExample": "e.g., 'a legendary sword with glowing blue runes and ancient engravings'",
+    "generateButton": "Generate Image",
+    "generating": "Generating...",
+    "generationComplete": "Generation complete!",
+    "generationFailed": "Generation failed. Please try again.",
+    "quality": {
+      "label": "Quality",
+      "standard": "Standard",
+      "high": "High",
+      "ultra": "Ultra"
+    },
+    "style": {
+      "label": "Style",
+      "realistic": "Realistic",
+      "artistic": "Artistic",
+      "cartoon": "Cartoon",
+      "fantasy": "Fantasy",
+      "sciFi": "Sci-Fi"
+    }
+  },
+  "history": {
+    "title": "Generation History",
+    "empty": "No generation history yet",
+    "emptyDescription": "Your generated images will appear here",
+    "clearAll": "Clear All",
+    "clearConfirm": "Are you sure you want to clear all history? This action cannot be undone.",
+    "export": "Export History",
+    "download": "Download",
+    "delete": "Delete",
+    "share": "Share",
+    "favorite": "Favorite",
+    "unfavorite": "Remove from Favorites"
+  },
+  "explore": {
+    "title": "Explore",
+    "subtitle": "Discover amazing AI-generated game assets",
+    "searchPlaceholder": "Search for items...",
+    "filterBy": "Filter by",
+    "sortBy": "Sort by",
+    "viewMode": "View Mode",
+    "grid": "Grid",
+    "list": "List",
+    "noResults": "No results found",
+    "tryDifferentSearch": "Try a different search term or adjust your filters"
+  },
+  "personalize": {
+    "title": "Personalize",
+    "subtitle": "Customize your experience and preferences",
+    "theme": "Theme",
+    "language": "Language",
+    "notifications": "Notifications",
+    "privacy": "Privacy",
+    "accessibility": "Accessibility"
+  },
+  "organize": {
+    "title": "Organize",
+    "subtitle": "Manage and organize your generated assets",
+    "folders": "Folders",
+    "tags": "Tags",
+    "collections": "Collections",
+    "createFolder": "Create Folder",
+    "createCollection": "Create Collection",
+    "addTag": "Add Tag",
+    "rename": "Rename",
+    "move": "Move",
+    "duplicate": "Duplicate"
+  },
+  "pricing": {
+    "title": "Pricing Plans",
+    "subtitle": "Choose the plan that fits your needs",
+    "free": "Free",
+    "pro": "Pro",
+    "enterprise": "Enterprise",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "currentPlan": "Current Plan",
+    "upgrade": "Upgrade",
+    "downgrade": "Downgrade",
+    "cancel": "Cancel Subscription",
+    "features": "Features",
+    "generationsPerMonth": "Generations per month",
+    "unlimited": "Unlimited",
+    "prioritySupport": "Priority Support",
+    "advancedFeatures": "Advanced Features",
+    "apiAccess": "API Access"
+  },
+  "landing": {
+    "hero": {
+      "title": "AI-Powered Game Asset Generation",
+      "subtitle": "Create stunning, professional-quality game assets in seconds with our advanced AI technology",
+      "cta": "Start Creating",
+      "learnMore": "Learn More"
+    },
+    "features": {
+      "title": "Why Choose Propella?",
+      "aiPowered": "AI-Powered Generation",
+      "aiPoweredDesc": "State-of-the-art AI models trained on millions of game assets",
+      "fast": "Lightning Fast",
+      "fastDesc": "Generate high-quality assets in seconds, not hours",
+      "professional": "Professional Quality",
+      "professionalDesc": "Assets ready for production use in any game engine",
+      "customizable": "Highly Customizable",
+      "customizableDesc": "Fine-tune every aspect of your generated assets"
+    },
+    "cta": {
+      "title": "Ready to Transform Your Game Development?",
+      "subtitle": "Join thousands of developers already using Propella",
+      "button": "Get Started Free"
+    }
   }
 }
 

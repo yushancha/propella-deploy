@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { redirect, useRouter } from 'next/navigation';
 import { useTheme } from "../../contexts/ThemeContext";
+import { t } from "../../lib/i18n";
 
 export default function SettingsPage() {
   const { data: session, status } = useSession();
@@ -24,15 +25,15 @@ export default function SettingsPage() {
   if (!session) redirect('/');
 
   const menuItems = [
-    { id: 'general', label: '通用设置', icon: '⚙️' },
-    { id: 'appearance', label: '外观', icon: '🎨' },
-    { id: 'generation', label: '生成设置', icon: '⚡' },
-    { id: 'account', label: '账户', icon: '👤' },
+    { id: 'general', label: t('settings.general.title'), icon: '⚙️' },
+    { id: 'appearance', label: t('settings.appearance.title'), icon: '🎨' },
+    { id: 'generation', label: t('settings.generation.title'), icon: '⚡' },
+    { id: 'account', label: t('settings.account.title'), icon: '👤' },
   ];
 
   return (
     <div className="fixed inset-0 bg-white dark:bg-gray-900 z-50 overflow-hidden">
-      {/* 顶部栏 */}
+      {/* Top Bar */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-3">
           <button 
@@ -43,7 +44,7 @@ export default function SettingsPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">设置</h1>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">{t('settings.title')}</h1>
         </div>
         <button 
           onClick={() => router.push('/')}
@@ -56,7 +57,7 @@ export default function SettingsPage() {
       </div>
 
       <div className="flex h-[calc(100vh-73px)]">
-        {/* 左侧菜单 */}
+        {/* Left Menu */}
         <div className="w-64 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
           <nav className="p-4 space-y-1">
             {menuItems.map((item) => (
@@ -76,21 +77,21 @@ export default function SettingsPage() {
           </nav>
         </div>
 
-        {/* 右侧内容 */}
+        {/* Right Content */}
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-2xl mx-auto p-6">
-            {/* 通用设置 */}
+            {/* General Settings */}
             {activeTab === 'general' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">通用设置</h2>
+                  <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">{t('settings.general.title')}</h2>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between py-3">
                     <div>
-                      <h3 className="text-sm font-medium text-gray-900 dark:text-white">通知</h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">接收生成完成和系统更新通知</p>
+                      <h3 className="text-sm font-medium text-gray-900 dark:text-white">{t('settings.account.notifications')}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('settings.account.notificationsDescription')}</p>
                     </div>
                     <button
                       onClick={() => setNotifications(!notifications)}
@@ -106,8 +107,8 @@ export default function SettingsPage() {
 
                   <div className="flex items-center justify-between py-3">
                     <div>
-                      <h3 className="text-sm font-medium text-gray-900 dark:text-white">自动保存</h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">自动保存生成的作品到历史记录</p>
+                      <h3 className="text-sm font-medium text-gray-900 dark:text-white">{t('settings.account.autosave')}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('settings.account.autosaveDescription')}</p>
                     </div>
                     <button
                       onClick={() => setAutoSave(!autoSave)}
@@ -124,15 +125,15 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* 外观设置 */}
+            {/* Appearance Settings */}
             {activeTab === 'appearance' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">外观</h2>
+                  <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">{t('settings.appearance.title')}</h2>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">主题</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{t('settings.appearance.theme')}</label>
                   <div className="grid grid-cols-3 gap-3">
                     <button
                       onClick={() => setTheme('light')}
@@ -141,7 +142,7 @@ export default function SettingsPage() {
                       }`}
                     >
                       <div className="w-full h-12 bg-white rounded border mb-2"></div>
-                      <span className="text-sm text-gray-900 dark:text-white">浅色</span>
+                      <span className="text-sm text-gray-900 dark:text-white">{t('settings.appearance.light')}</span>
                     </button>
                     <button
                       onClick={() => setTheme('dark')}
@@ -150,7 +151,7 @@ export default function SettingsPage() {
                       }`}
                     >
                       <div className="w-full h-12 bg-gray-800 rounded border mb-2"></div>
-                      <span className="text-sm text-gray-900 dark:text-white">深色</span>
+                      <span className="text-sm text-gray-900 dark:text-white">{t('settings.appearance.dark')}</span>
                     </button>
                     <button
                       onClick={() => setTheme('system')}
@@ -159,40 +160,40 @@ export default function SettingsPage() {
                       }`}
                     >
                       <div className="w-full h-12 bg-gradient-to-r from-white to-gray-800 rounded border mb-2"></div>
-                      <span className="text-sm text-gray-900 dark:text-white">系统</span>
+                      <span className="text-sm text-gray-900 dark:text-white">{t('settings.appearance.system')}</span>
                     </button>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* 生成设置 */}
+            {/* Generation Settings */}
             {activeTab === 'generation' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">生成设置</h2>
+                  <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">{t('settings.generation.title')}</h2>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">默认图片质量</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('settings.generation.defaultQuality')}</label>
                   <select 
                     value={quality}
                     onChange={e => setQuality(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    <option value="standard">标准质量</option>
-                    <option value="high">高质量</option>
-                    <option value="ultra">超高质量</option>
+                    <option value="standard">{t('settings.generation.standard')}</option>
+                    <option value="high">{t('settings.generation.high')}</option>
+                    <option value="ultra">{t('settings.generation.ultra')}</option>
                   </select>
                 </div>
               </div>
             )}
 
-            {/* 账户设置 */}
+            {/* Account Settings */}
             {activeTab === 'account' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">账户</h2>
+                  <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">{t('settings.account.title')}</h2>
                 </div>
                 
                 <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -201,7 +202,7 @@ export default function SettingsPage() {
                     <h3 className="font-semibold text-gray-900 dark:text-white">{session.user?.name}</h3>
                     <p className="text-gray-600 dark:text-gray-400">{session.user?.email}</p>
                     <span className="inline-block px-2 py-1 text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full mt-1">
-                      免费用户
+                      Free User
                     </span>
                   </div>
                 </div>
@@ -214,7 +215,7 @@ export default function SettingsPage() {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                    <span>退出登录</span>
+                    <span>{t('auth.logout')}</span>
                   </button>
                 </div>
               </div>

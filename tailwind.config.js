@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // 现代化主题系统 - 使用CSS变量
+        // Modern theme system - using CSS variables
         'bg-primary': 'var(--bg-primary)',
         'bg-secondary': 'var(--bg-secondary)',
         'bg-tertiary': 'var(--bg-tertiary)',
@@ -26,27 +26,27 @@ module.exports = {
         'accent-hover': 'var(--accent-hover)',
         'accent-light': 'var(--accent-light)',
 
-        // 状态颜色
+        // Status colors
         'success': 'var(--success)',
         'warning': 'var(--warning)',
         'error': 'var(--error)',
         'info': 'var(--info)',
 
-        // 主色调系统（这里把 500 改成 #2d2e30）
+        // Primary color system (here we changed 500 to #2d2e30)
         primary: {
           50: '#eff6ff',
           100: '#dbeafe',
           200: '#bfdbfe',
           300: '#93c5fd',
           400: '#60a5fa',
-          500: '#2d2e30',          // ← 这里改掉了
+          500: '#2d2e30',          // ← Changed here
           600: '#2563eb',
           700: '#1d4ed8',
           800: '#1e40af',
           900: '#1e3a8a',
         },
 
-        // 兼容别名
+        // Compatibility aliases
         'surface-primary': 'var(--bg-primary)',
         'surface-secondary': 'var(--bg-secondary)',
         'surface-tertiary': 'var(--bg-tertiary)',
@@ -65,19 +65,19 @@ module.exports = {
         '88': '22rem',
         '128': '32rem',
       },
-      animation: { /* 省略，同你原文件 */ },
-      keyframes: { /* 省略，同你原文件 */ },
+      animation: { /* Omitted, same as your original file */ },
+      keyframes: { /* Omitted, same as your original file */ },
       boxShadow: {
         'glow': '0 0 20px rgba(14, 165, 233, 0.4)',
         'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
         'card-hover': '0 10px 25px -3px rgba(0, 0, 0, 0.15)',
         'modal': '0 20px 25px -5px rgba(0, 0, 0, 0.2)',
       },
-      backdropBlur: { /* 省略，同你原文件 */ },
+      backdropBlur: { /* Omitted, same as your original file */ },
     },
   },
   plugins: [
-    // 如果 Tailwind ≥3.3，可删除下面这行，因为已内置
+    // If Tailwind ≥3.3, you can delete the line below as it's built-in
     // require('@tailwindcss/line-clamp'),
   ],
 };
