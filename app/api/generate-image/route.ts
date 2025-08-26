@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { t } from "../../../lib/i18n";
 import { getServerSession } from "next-auth";
 import { PrismaClient } from "@prisma/client";
 
@@ -43,21 +44,21 @@ export async function POST(request: NextRequest) {
     const session = await getServerSession();
     
     if (!session?.user?.email) {
-      return NextResponse.json({ success: false, error: "请先登录" }, { status: 401 });
+      return NextResponse.json({ success: false, error: "Please sign in first" }, { status: 401 });
     }
 
     const body = await request.json();
     const { name, style, level } = body;
 
     if (!name || !style || !level) {
-      return NextResponse.json({ success: false, error: "参数不完整" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Missing required parameters" }, { status: 400 });
     }
 
     const stylePrompt = STYLE_PROMPTS[style];
     const levelPrompt = LEVEL_PROMPTS[level];
     
     if (!stylePrompt || !levelPrompt) {
-      return NextResponse.json({ success: false, error: "风格或等级不支持" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Unsupported style or tier" }, { status: 400 });
     }
 
     // 构建更丰富的英文提示词
@@ -68,8 +69,8 @@ export async function POST(request: NextRequest) {
     const prompt = `A ${levelPromptEn} ${name} in ${stylePromptEn}. Professional game prop asset, isolated on transparent background, high-resolution texture, detailed 3D rendering, PBR materials, game-ready asset, professional game art, studio lighting, centered composition, perfect for RPG games, no text or UI elements.`;
     
     // 同时记录中英文提示词用于调试
-    console.log("中文 prompt:", `${stylePrompt}，${levelPrompt}，${name}`);
-    console.log("英文 prompt:", prompt);
+    console.log("CN prompt:", `${stylePrompt}，${levelPrompt}，${name}`);
+    console.log("EN prompt:", prompt);
 
     // 调用AI生成接口
     const res = await fetch(API_URL, {
@@ -86,12 +87,12 @@ export async function POST(request: NextRequest) {
 
     if (!res.ok) {
       const err = await res.text();
-      console.error("火山方舟接口返回错误：", err);
-      return NextResponse.json({ success: false, error: "AI生成服务暂时不可用" }, { status: 500 });
+      console.error("Volcengine API error:", err);
+      return NextResponse.json({ success: false, error: "AI generation service is temporarily unavailable" }, { status: 500 });
     }
 
     const data = await res.json();
-    console.log("API 返回数据:", JSON.stringify(data, null, 2));
+    console.log("API response:", JSON.stringify(data, null, 2));
     
     // 提取图片URL
     let imageUrl;
@@ -102,8 +103,8 @@ export async function POST(request: NextRequest) {
     } else if (data.image_url) {
       imageUrl = data.image_url;
     } else {
-      console.error("无法从API响应中找到图片URL:", data);
-      return NextResponse.json({ success: false, error: "AI返回格式错误，未找到图片URL" }, { status: 500 });
+      console.error("Could not find image URL in API response:", data);
+      return NextResponse.json({ success: false, error: "Invalid AI response: image URL not found" }, { status: 500 });
     }
 
     // 保存到历史记录
@@ -124,7 +125,7 @@ export async function POST(request: NextRequest) {
         });
       }
     } catch (error) {
-      console.error("保存历史记录失败:", error);
+      console.error("Failed to save history:", error);
       // 不影响主流程，继续返回结果
     }
 
@@ -136,7 +137,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error("生成图片失败:", error);
-    return NextResponse.json({ success: false, error: "生成失败: " + error.message }, { status: 500 });
+    console.error("Image generation failed:", error);
+    return NextResponse.json({ success: false, error: "Generation failed: " + error.message }, { status: 500 });
   }
 }

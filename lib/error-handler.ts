@@ -18,7 +18,7 @@ export class AppError extends Error {
 /**
  * API错误响应格式
  */
-export function createErrorResponse(error: unknown, defaultMessage: string = "服务器内部错误") {
+export function createErrorResponse(error: unknown, defaultMessage: string = "Internal server error") {
   if (error instanceof AppError) {
     return {
       error: error.message,

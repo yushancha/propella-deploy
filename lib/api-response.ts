@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { t } from './i18n';
 
 /**
  * 统一API响应格式
@@ -7,7 +8,7 @@ export class ApiResponse {
   /**
    * 成功响应
    */
-  static success<T>(data: T, message: string = "操作成功", statusCode: number = 200) {
+  static success<T>(data: T, message: string = t('api.success'), statusCode: number = 200) {
     return NextResponse.json({
       success: true,
       message,
@@ -34,7 +35,7 @@ export class ApiResponse {
   static validation(errors: Record<string, string[]>) {
     return NextResponse.json({
       success: false,
-      message: "数据验证失败",
+      message: t('api.validationFailed'),
       errors,
       timestamp: new Date().toISOString(),
     }, { status: 400 });
@@ -43,7 +44,7 @@ export class ApiResponse {
   /**
    * 未授权响应
    */
-  static unauthorized(message: string = "未授权访问") {
+  static unauthorized(message: string = t('api.unauthorized')) {
     return NextResponse.json({
       success: false,
       message,
@@ -54,7 +55,7 @@ export class ApiResponse {
   /**
    * 禁止访问响应
    */
-  static forbidden(message: string = "禁止访问") {
+  static forbidden(message: string = t('api.forbidden')) {
     return NextResponse.json({
       success: false,
       message,
@@ -65,7 +66,7 @@ export class ApiResponse {
   /**
    * 资源未找到响应
    */
-  static notFound(message: string = "资源未找到") {
+  static notFound(message: string = t('api.notFound')) {
     return NextResponse.json({
       success: false,
       message,

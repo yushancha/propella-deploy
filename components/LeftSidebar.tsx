@@ -148,7 +148,7 @@ export default function LeftSidebar() {
   }, []);
 
   // Midjourney导航结构 - 精确复刻
-  const [chatSubmenuOpen, setChatSubmenuOpen] = useState(false);
+  // Removed chat submenu as Chat feature is deprecated
 
   const navItems: NavItem[] = [
     { id: 'explore', label: 'Explore', icon: <Icons.Explore />, href: '/explore' },
@@ -156,20 +156,6 @@ export default function LeftSidebar() {
     { id: 'edit', label: 'Edit', icon: <Icons.Edit />, href: '/edit' },
     { id: 'personalize', label: 'Personalize', icon: <Icons.Personalize />, href: '/personalize' },
     { id: 'organize', label: 'Organize', icon: <Icons.Organize />, href: '/organize' },
-    {
-      id: 'chat',
-      label: 'Chat',
-      icon: <Icons.Chat />,
-      hasSubmenu: true,
-      isSubmenuOpen: chatSubmenuOpen,
-      action: () => setChatSubmenuOpen(!chatSubmenuOpen),
-      submenu: [
-        { id: 'chat-general', label: 'General Chat', icon: <Icons.Chat />, href: '/chat/general' },
-        { id: 'chat-help', label: 'Help Chat', icon: <Icons.Help />, href: '/chat/help' },
-        { id: 'chat-feedback', label: 'Feedback', icon: <Icons.Updates />, href: '/chat/feedback' },
-      ]
-    },
-    { id: 'tasks', label: 'Tasks', icon: <Icons.Tasks />, href: '/tasks' },
     { id: 'subscribe', label: 'Subscribe', icon: <Icons.Subscribe />, href: '/subscribe' },
     { id: 'help', label: 'Help', icon: <Icons.Help />, href: '/help' },
     { id: 'updates', label: 'Updates', icon: <Icons.Updates />, href: '/updates', badge: 2 },
@@ -220,7 +206,7 @@ export default function LeftSidebar() {
 
       <nav
         id="left-sidebar"
-        className={`fixed left-0 top-0 h-screen bg-surface-primary border-r border-border-primary z-40 transition-all duration-300 ease-in-out ${
+        className={`fixed left-0 top-0 h-screen bg-surface-primary z-40 transition-all duration-300 ease-in-out ${
           isCollapsed ? 'w-16' : 'w-64'
         } ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'

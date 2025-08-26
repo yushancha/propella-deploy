@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useTheme } from '../contexts/ThemeContext';
 import type { ThemeType } from '../contexts/ThemeContext';
+import { t } from '../lib/i18n';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -77,7 +78,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     }
   }, [isOpen]);
 
-  // 导出数据功能
+  // Export data
   const handleExportData = () => {
     try {
       const history = localStorage.getItem('history') || '[]';
@@ -102,16 +103,16 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       link.click();
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('导出失败:', error);
-      alert('导出失败，请重试');
+      console.error('Export failed:', error);
+      alert(t('settings.data.exportFailed'));
     }
   };
 
-  // 清除数据功能
+  // Clear data
   const handleClearData = () => {
-    if (confirm('确定要清除所有历史记录吗？此操作不可撤销。')) {
+    if (confirm(t('settings.data.clearConfirm'))) {
       localStorage.removeItem('history');
-      alert('历史记录已清除');
+      alert(t('settings.data.cleared'));
     }
   };
 
@@ -166,9 +167,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         </button>
         
         <div className="modal-layout flex h-[85vh]">
-          {/* 左侧导航 */}
+          {/* Left nav */}
           <nav className="modal-nav flex-shrink-0 w-56 bg-surface-primary border-r border-border-primary p-6">
-            <h2 id="settings-title" className="text-xl font-bold mb-6 text-text-high">设置</h2>
+            <h2 id="settings-title" className="text-xl font-bold mb-6 text-text-high">{t('settings.title')}</h2>
             <ul className="space-y-2">
               {menuItems.map((item) => (
                 <li key={item.id}>
@@ -188,57 +189,57 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </ul>
           </nav>
 
-          {/* 主内容区 */}
+          {/* Main content */}
           <div className="flex-1 p-8 overflow-y-auto">
             {activeTab === 'general' && (
               <div className="space-y-8 animate-fade-in">
                 <div>
-                  <h3 className="text-2xl font-bold mb-6 text-text-high">通用设置</h3>
+                  <h3 className="text-2xl font-bold mb-6 text-text-high">{t('settings.general.title')}</h3>
                   
                   <div className="space-y-6">
-                    {/* 主题设置 */}
+                    {/* Theme */}
                     <div className="bg-surface-tertiary rounded-xl p-6 border border-border-primary">
                       <div className="flex items-center justify-between mb-4">
                         <div>
-                          <h4 className="text-lg font-semibold text-text-high">主题</h4>
-                          <p className="text-sm text-text-medium">选择界面主题</p>
+                          <h4 className="text-lg font-semibold text-text-high">{t('settings.general.theme.label')}</h4>
+                          <p className="text-sm text-text-medium">{t('settings.general.theme.description')}</p>
                         </div>
                         <select
                           value={theme}
                           onChange={(e) => setTheme(e.target.value as ThemeType)}
                           className="bg-surface-secondary border border-border-primary rounded-lg px-4 py-2 text-text-high hover:bg-surface-primary focus:bg-surface-primary transition-colors"
                         >
-                          <option value="light">浅色</option>
-                          <option value="dark">深色</option>
+                          <option value="light">{t('settings.general.theme.light')}</option>
+                          <option value="dark">{t('settings.general.theme.dark')}</option>
                         </select>
                       </div>
                     </div>
 
-                    {/* 生成质量 */}
+                    {/* Generation quality */}
                     <div className="bg-surface-tertiary rounded-xl p-6 border border-border-primary">
                       <div className="flex items-center justify-between mb-4">
                         <div>
-                          <h4 className="text-lg font-semibold text-text-high">生成质量</h4>
-                          <p className="text-sm text-text-medium">选择图像生成质量</p>
+                          <h4 className="text-lg font-semibold text-text-high">{t('settings.general.quality.label')}</h4>
+                          <p className="text-sm text-text-medium">{t('settings.general.quality.description')}</p>
                         </div>
                         <select
                           value={quality}
                           onChange={(e) => setQuality(e.target.value)}
                           className="bg-surface-secondary border border-border-primary rounded-lg px-4 py-2 text-text-high hover:bg-surface-primary focus:bg-surface-primary transition-colors"
                         >
-                          <option value="standard">标准</option>
-                          <option value="high">高质量</option>
-                          <option value="ultra">超高质量</option>
+                          <option value="standard">{t('settings.general.quality.standard')}</option>
+                          <option value="high">{t('settings.general.quality.high')}</option>
+                          <option value="ultra">{t('settings.general.quality.ultra')}</option>
                         </select>
                       </div>
                     </div>
 
-                    {/* 自动保存 */}
+                    {/* Auto-save */}
                     <div className="bg-surface-tertiary rounded-xl p-6 border border-border-primary">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-lg font-semibold text-text-high">自动保存</h4>
-                          <p className="text-sm text-text-medium">自动保存生成的作品到历史记录</p>
+                          <h4 className="text-lg font-semibold text-text-high">{t('settings.general.autosave.label')}</h4>
+                          <p className="text-sm text-text-medium">{t('settings.general.autosave.description')}</p>
                         </div>
                         <button
                           onClick={() => setAutoSave(!autoSave)}
@@ -253,12 +254,12 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       </div>
                     </div>
 
-                    {/* 通知设置 */}
+                    {/* Notifications */}
                     <div className="bg-surface-tertiary rounded-xl p-6 border border-border-primary">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-lg font-semibold text-text-high">桌面通知</h4>
-                          <p className="text-sm text-text-medium">生成完成时显示桌面通知</p>
+                          <h4 className="text-lg font-semibold text-text-high">{t('settings.general.notifications.label')}</h4>
+                          <p className="text-sm text-text-medium">{t('settings.general.notifications.description')}</p>
                         </div>
                         <button
                           onClick={() => setNotifications(!notifications)}
@@ -280,13 +281,13 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             {activeTab === 'personalization' && (
               <div className="space-y-6 animate-fade-in">
                 <div>
-                  <h3 className="text-2xl font-bold mb-6 text-text-high">个性化设置</h3>
+                  <h3 className="text-2xl font-bold mb-6 text-text-high">{t('settings.tabs.personalization')}</h3>
                   <div className="bg-surface-tertiary rounded-xl p-8 border border-border-primary text-center">
                     <div className="w-16 h-16 mx-auto mb-4 bg-surface-secondary rounded-full flex items-center justify-center">
                       <span className="text-2xl">🎨</span>
                     </div>
-                    <h4 className="text-lg font-semibold text-text-high mb-2">个性化功能即将推出</h4>
-                    <p className="text-text-medium">我们正在开发更多个性化选项，敬请期待！</p>
+                    <h4 className="text-lg font-semibold text-text-high mb-2">Personalization is coming soon</h4>
+                    <p className="text-text-medium">We’re building more customization options—stay tuned.</p>
                   </div>
                 </div>
               </div>
@@ -295,15 +296,13 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             {activeTab === 'data-controls' && (
               <div className="space-y-6 animate-fade-in">
                 <div>
-                  <h3 className="text-2xl font-bold mb-6 text-text-high">数据控制</h3>
+                  <h3 className="text-2xl font-bold mb-6 text-text-high">{t('settings.tabs.dataControls')}</h3>
                   
                   <div className="space-y-4">
                     {/* 导出数据 */}
                     <div className="bg-surface-tertiary rounded-xl p-6 border border-border-primary">
-                      <h4 className="text-lg font-semibold text-text-high mb-2">导出数据</h4>
-                      <p className="text-sm text-text-medium mb-4">
-                        下载您的所有历史记录和设置数据
-                      </p>
+                      <h4 className="text-lg font-semibold text-text-high mb-2">{t('settings.data.export')}</h4>
+                      <p className="text-sm text-text-medium mb-4">{t('settings.data.exportDescription')}</p>
                       <button
                         onClick={handleExportData}
                         className="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-lg transition-all duration-200 font-medium hover:shadow-glow hover:-translate-y-0.5 flex items-center gap-2"
@@ -311,16 +310,14 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        导出数据
+                        {t('settings.data.export')}
                       </button>
                     </div>
 
                     {/* 清除数据 */}
                     <div className="bg-surface-tertiary rounded-xl p-6 border border-red-500/20">
-                      <h4 className="text-lg font-semibold text-red-400 mb-2">清除历史记录</h4>
-                      <p className="text-sm text-text-medium mb-4">
-                        删除所有本地存储的历史记录，此操作不可撤销
-                      </p>
+                      <h4 className="text-lg font-semibold text-red-400 mb-2">{t('settings.data.clear')}</h4>
+                      <p className="text-sm text-text-medium mb-4">{t('settings.data.clearConfirm')}</p>
                       <button
                         onClick={handleClearData}
                         className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-all duration-200 font-medium hover:-translate-y-0.5 flex items-center gap-2"
@@ -328,17 +325,15 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
-                        清除数据
+                        {t('settings.data.clear')}
                       </button>
                     </div>
 
                     {/* 账户操作 */}
                     {session && (
                       <div className="bg-surface-tertiary rounded-xl p-6 border border-border-primary">
-                        <h4 className="text-lg font-semibold text-text-high mb-2">账户操作</h4>
-                        <p className="text-sm text-text-medium mb-4">
-                          退出当前账户
-                        </p>
+                        <h4 className="text-lg font-semibold text-text-high mb-2">Account</h4>
+                        <p className="text-sm text-text-medium mb-4">Sign out of your account</p>
                         <button
                           onClick={() => signOut()}
                           className="bg-surface-secondary hover:bg-surface-primary border border-border-primary text-text-high px-6 py-3 rounded-lg transition-all duration-200 font-medium hover:-translate-y-0.5 flex items-center gap-2"
@@ -346,7 +341,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                           </svg>
-                          退出登录
+                          Sign out
                         </button>
                       </div>
                     )}
@@ -358,7 +353,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             {activeTab === 'about' && (
               <div className="space-y-6 animate-fade-in">
                 <div>
-                  <h3 className="text-2xl font-bold mb-6 text-text-high">关于 Propella</h3>
+                  <h3 className="text-2xl font-bold mb-6 text-text-high">About Propella</h3>
                   
                   <div className="space-y-6">
                     <div className="bg-surface-tertiary rounded-xl p-6 border border-border-primary">
@@ -368,17 +363,17 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         </div>
                         <div>
                           <h4 className="text-xl font-bold text-text-high">Propella AI</h4>
-                          <p className="text-text-medium">版本 1.0.0</p>
+                          <p className="text-text-medium">Version 1.0.0</p>
                         </div>
                       </div>
                       <p className="text-text-medium leading-relaxed">
-                        Propella 是一个专业的 AI 游戏道具生成工具，帮助游戏开发者和设计师快速创建高质量的游戏道具图像。
-                        使用最先进的 AI 技术，支持多种艺术风格和稀有度等级。
+                        Propella is a professional AI-powered game prop generator that helps game developers and artists create high-quality item visuals fast.
+                        Powered by cutting-edge AI, it supports multiple art styles and rarity tiers.
                       </p>
                     </div>
 
                     <div className="bg-surface-tertiary rounded-xl p-6 border border-border-primary">
-                      <h4 className="text-lg font-semibold text-text-high mb-3">技术栈</h4>
+                      <h4 className="text-lg font-semibold text-text-high mb-3">Tech Stack</h4>
                       <div className="grid grid-cols-2 gap-3 text-sm">
                         <div className="flex items-center gap-2">
                           <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
@@ -400,9 +395,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     </div>
 
                     <div className="bg-surface-tertiary rounded-xl p-6 border border-border-primary">
-                      <h4 className="text-lg font-semibold text-text-high mb-3">联系我们</h4>
+                      <h4 className="text-lg font-semibold text-text-high mb-3">Contact Us</h4>
                       <div className="space-y-2 text-sm">
-                        <p className="text-text-medium">如有问题或建议，请联系我们：</p>
+                        <p className="text-text-medium">For questions or feedback, reach us at:</p>
                         <p className="text-text-medium">📧 support@propella.ai</p>
                         <p className="text-text-medium">🌐 www.propella.ai</p>
                       </div>

@@ -1,15 +1,16 @@
 import { z } from 'zod';
+import { t } from './i18n';
 
 /**
  * 通用验证规则
  */
 export const commonValidation = {
-  email: z.string().email("请输入有效的邮箱地址"),
-  password: z.string().min(6, "密码至少6位").max(50, "密码最多50位"),
-  name: z.string().min(1, "姓名不能为空").max(50, "姓名最多50位"),
-  prompt: z.string().min(1, "提示词不能为空").max(500, "提示词最多500位"),
+  email: z.string().email(t('validation.email')),
+  password: z.string().min(6, t('validation.passwordLength')).max(50, t('validation.passwordMax')),
+  name: z.string().min(1, t('validation.nameRequired')).max(50, t('validation.nameMax')),
+  prompt: z.string().min(1, t('validation.promptRequired')).max(500, t('validation.promptMax')),
   style: z.enum(["pixel", "cyberpunk", "fantasy", "scifi", "cartoon"], {
-    errorMap: () => ({ message: "请选择有效的风格" })
+    errorMap: () => ({ message: t('validation.styleInvalid') })
   }),
 };
 
@@ -55,6 +56,6 @@ export function validateRequest<T>(schema: z.ZodSchema<T>, data: unknown): {
       });
       return { success: false, errors };
     }
-    return { success: false, errors: { general: "验证失败" } };
+    return { success: false, errors: { general: t('validation.genericFailure') } };
   }
 }

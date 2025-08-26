@@ -1,0 +1,81 @@
+{
+  "sidebar": {
+    "explore": "Explore",
+    "create": "Create",
+    "edit": "Edit",
+    "personalize": "Personalize",
+    "organize": "Organize",
+    "subscribe": "Subscribe",
+    "help": "Help",
+    "updates": "Updates",
+    "system": "System"
+  },
+  "createPage": {
+    "title": "Create",
+    "subtitle": "Generate stunning game items with AI",
+    "placeholder": "Describe your item in detail... e.g., 'a legendary sword with glowing blue runes and ancient engravings'",
+    "generateButton": "Generate"
+  },
+  "validation": {
+    "email": "Please enter a valid email address",
+    "passwordLength": "Password must be at least 6 characters",
+    "passwordMax": "Password must be at most 50 characters",
+    "nameRequired": "Name is required",
+    "nameMax": "Name must be at most 50 characters",
+    "promptRequired": "Prompt is required",
+    "promptMax": "Prompt must be at most 500 characters",
+    "styleInvalid": "Please select a valid style",
+    "genericFailure": "Validation failed"
+  },
+  "api": {
+    "success": "Operation succeeded",
+    "validationFailed": "Data validation failed",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "notFound": "Resource not found",
+    "serverError": "Internal server error"
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "general": "General",
+      "personalization": "Personalization",
+      "dataControls": "Data Controls",
+      "about": "About"
+    },
+    "general": {
+      "title": "General Settings",
+      "theme": {
+        "label": "Theme",
+        "description": "Choose your interface theme",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "quality": {
+        "label": "Generation Quality",
+        "description": "Choose image generation quality",
+        "standard": "Standard",
+        "high": "High quality",
+        "ultra": "Ultra quality"
+      },
+      "autosave": {
+        "label": "Auto-save",
+        "description": "Automatically save your results"
+      },
+      "notifications": {
+        "label": "Notifications",
+        "description": "Get notified when your images are ready"
+      }
+    },
+    "data": {
+      "export": "Export Data",
+      "exportDescription": "Download your history and settings as a JSON file.",
+      "exportFailed": "Export failed. Please try again.",
+      "clear": "Clear History",
+      "clearConfirm": "Are you sure you want to clear all history? This cannot be undone.",
+      "cleared": "History cleared"
+    },
+    "closeAria": "Close settings"
+  }
+}
+
