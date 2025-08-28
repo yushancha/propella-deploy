@@ -287,7 +287,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       <span className="text-2xl">🎨</span>
                     </div>
                     <h4 className="text-lg font-semibold text-text-high mb-2">Personalization is coming soon</h4>
-                    <p className="text-text-medium">We're building more customization options—stay tuned.</p>
+                    <p className="text-text-medium">We&apos;re building more customization options—stay tuned.</p>
                   </div>
                 </div>
               </div>

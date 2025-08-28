@@ -27,7 +27,7 @@ export default function SubscribePage() {
           </h1>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
             Unlock the full potential of AI-powered game asset generation. 
-            Start free and upgrade when you're ready for more.
+            Start free and upgrade when you&apos;re ready for more.
           </p>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function SubscribePage() {
                       </svg>
                     </div>
                     <span className="text-text-secondary">3 credits per generation</span>
-        </div>
+                  </div>
 
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-success-500/20 rounded-full flex items-center justify-center">
@@ -74,7 +74,7 @@ export default function SubscribePage() {
                       </svg>
                     </div>
                     <span className="text-text-secondary">Standard generation speed</span>
-        </div>
+                  </div>
 
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-warning-500/20 rounded-full flex items-center justify-center">
@@ -83,25 +83,25 @@ export default function SubscribePage() {
                       </svg>
                     </div>
                     <span className="text-text-secondary">Includes watermark on creations</span>
-              </div>
-            </div>
+                  </div>
+                </div>
 
                 {/* Action Button */}
-            <button
+                <button 
                   className="w-full py-4 px-6 bg-surface-secondary border-2 border-border-primary text-text-secondary rounded-xl font-semibold cursor-not-allowed opacity-60"
-              disabled
-            >
-              Your Current Plan
-            </button>
+                  disabled
+                >
+                  Your Current Plan
+                </button>
               </div>
-          </div>
+            </div>
 
             {/* Pro Plan Card - Highlighted */}
             <div className="relative">
               {/* Most Popular Badge */}
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
                 <div className="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-2 rounded-full font-semibold text-sm shadow-lg">
-                Most Popular
+                  Most Popular
                 </div>
               </div>
 
@@ -217,7 +217,7 @@ export default function SubscribePage() {
                   </div>
                   <h4 className="font-semibold text-text-primary mb-2">Commercial Use</h4>
                   <p className="text-text-secondary text-sm">Use your generated assets in commercial projects</p>
-            </div>
+                </div>
 
                 <div className="text-center">
                   <div className="w-16 h-16 bg-primary-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -241,9 +241,9 @@ export default function SubscribePage() {
               <div className="space-y-6">
                 <div className="bg-surface-secondary border border-border-primary rounded-xl p-6">
                   <h4 className="font-semibold text-text-primary mb-2">Can I cancel my subscription anytime?</h4>
-                  <p className="text-text-secondary">Yes, you can cancel your Pro subscription at any time. You'll continue to have access to Pro features until the end of your current billing period.</p>
-            </div>
-
+                  <p className="text-text-secondary">Yes, you can cancel your Pro subscription at any time. You&apos;ll continue to have access to Pro features until the end of your current billing period.</p>
+                </div>
+                
                 <div className="bg-surface-secondary border border-border-primary rounded-xl p-6">
                   <h4 className="font-semibold text-text-primary mb-2">What happens to my credits if I downgrade?</h4>
                   <p className="text-text-secondary">If you downgrade to the Free plan, any unused Pro credits will be converted to the equivalent Free plan credits at the end of your billing period.</p>
@@ -251,7 +251,7 @@ export default function SubscribePage() {
                 
                 <div className="bg-surface-secondary border border-border-primary rounded-xl p-6">
                   <h4 className="font-semibold text-text-primary mb-2">Do you offer refunds?</h4>
-                  <p className="text-text-secondary">We offer a 30-day money-back guarantee. If you're not satisfied with Pro features, contact our support team for a full refund.</p>
+                  <p className="text-text-secondary">We offer a 30-day money-back guarantee. If you&apos;re not satisfied with Pro features, contact our support team for a full refund.</p>
                 </div>
               </div>
             </div>
