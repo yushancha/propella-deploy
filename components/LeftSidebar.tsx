@@ -101,6 +101,7 @@ export default function LeftSidebar() {
   const { theme, setTheme } = useTheme();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   // Mobile click outside to close sidebar
   useEffect(() => {
@@ -135,7 +136,7 @@ export default function LeftSidebar() {
     },
   ];
 
-  // Theme toggle functionality
+  // Theme toggle functionality - Fixed to work properly
   const toggleTheme = () => {
     // Cycle through themes: light -> dark -> system -> light
     const themeOrder: Array<'light' | 'dark' | 'system'> = ['light', 'dark', 'system'];
@@ -183,14 +184,14 @@ export default function LeftSidebar() {
           <div className="flex items-center justify-between p-4 border-b border-border-primary">
             <Link href="/" className="flex items-center gap-3 text-text-primary hover:text-white transition-colors group">
               <div className="relative">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:shadow-glow transition-all duration-300">
-                  P
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:shadow-glow transition-all duration-300">
+                  F
                 </div>
-                <div className="absolute -inset-1 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl opacity-20 group-hover:opacity-40 transition-opacity duration-300 -z-10"></div>
+                <div className="absolute -inset-1 bg-gradient-to-br from-blue-400 to-purple-600 rounded-xl opacity-20 group-hover:opacity-40 transition-opacity duration-300 -z-10"></div>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-lg gradient-text">
-                  Propella
+                  FreeAIToolsMax
                 </span>
                 <span className="text-xs text-text-tertiary">
                   AI Creator
@@ -333,34 +334,65 @@ export default function LeftSidebar() {
             {/* User Profile */}
             {session && (
               <div className="border-t border-border-primary pt-4">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-secondary/50 border border-border-primary hover:border-border-hover transition-all duration-200 group">
-                  <div className="relative flex-shrink-0">
-                    <Image
-                      src={session.user?.image || '/default-avatar.png'}
-                      alt="User Avatar"
-                      width={36}
-                      height={36}
-                      className="rounded-xl ring-2 ring-border-primary group-hover:ring-border-hover transition-all duration-200"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-success-500 rounded-full border-2 border-surface-primary"></div>
+                <div className="relative">
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-secondary/50 border border-border-primary hover:border-border-hover transition-all duration-200 group cursor-pointer">
+                    <div className="relative flex-shrink-0">
+                      <Image
+                        src={session.user?.image || '/default-avatar.png'}
+                        alt="User Avatar"
+                        width={36}
+                        height={36}
+                        className="rounded-xl ring-2 ring-border-primary group-hover:ring-border-hover transition-all duration-200"
+                      />
+                      <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-success-500 rounded-full border-2 border-surface-primary"></div>
+                    </div>
+
+                    <div className="flex-grow min-w-0">
+                      <div className="text-sm font-semibold text-text-primary truncate">
+                        {session.user?.name || 'User'}
+                      </div>
+                      <div className="text-xs text-text-tertiary truncate">
+                        {session.user?.email}
+                      </div>
+                    </div>
+
+                    <button
+                      className="p-2 rounded-lg hover:bg-surface-tertiary transition-all duration-200 text-text-tertiary hover:text-text-primary group/btn"
+                      title="User menu"
+                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
                   </div>
 
-                  <div className="flex-grow min-w-0">
-                    <div className="text-sm font-semibold text-text-primary truncate">
-                      {session.user?.name || 'User'}
+                  {/* User Dropdown Menu */}
+                  {isUserMenuOpen && (
+                    <div className="absolute bottom-full left-0 right-0 mb-2 bg-surface-modal border border-border-primary rounded-xl shadow-lg z-50 overflow-hidden">
+                      <div className="py-2">
+                        <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-text-primary hover:bg-surface-secondary transition-colors">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                          <span>Profile</span>
+                        </button>
+                        <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-text-primary hover:bg-surface-secondary transition-colors">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <span>Switch Account</span>
+                        </button>
+                        <button 
+                          onClick={handleSignOut}
+                          className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-500/10 transition-colors"
+                        >
+                          <Icons.Logout />
+                          <span>Logout</span>
+                        </button>
+                      </div>
                     </div>
-                    <div className="text-xs text-text-tertiary truncate">
-                      {session.user?.email}
-                    </div>
-                  </div>
-
-                  <button
-                    className="p-2 rounded-lg hover:bg-surface-tertiary transition-all duration-200 text-text-tertiary hover:text-text-primary group/btn"
-                    title="Sign out"
-                    onClick={handleSignOut}
-                  >
-                    <Icons.Logout />
-                  </button>
+                  )}
                 </div>
               </div>
             )}

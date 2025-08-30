@@ -13,28 +13,28 @@ export default function Navbar() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow-lg sticky top-0 z-50">
+    <nav className="bg-gradient-to-r from-navy-900 via-purple-900 to-indigo-900 shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="text-xl sm:text-2xl font-bold text-blue-600">
-            PropGen.AI
+          <Link href="/" className="text-xl sm:text-2xl font-bold text-white">
+            FreeAIToolsMax
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/" className="text-blue-100 hover:text-white transition-colors">
               {t('navigation.home')}
             </Link>
-            <Link href="/generate" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/generate" className="text-blue-100 hover:text-white transition-colors">
               {t('navigation.create')}
             </Link>
             {session && (
-              <Link href="/batch-generate" className="text-gray-700 hover:text-blue-600 transition-colors">
+              <Link href="/batch-generate" className="text-blue-100 hover:text-white transition-colors">
                 Batch Generate
               </Link>
             )}
-            <Link href="/pricing" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/pricing" className="text-blue-100 hover:text-white transition-colors">
               {t('navigation.subscribe')}
             </Link>
             
@@ -46,7 +46,7 @@ export default function Navbar() {
                 {t('auth.logout')}
               </button>
             ) : (
-              <Link href="/login" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors text-center">
+              <Link href="/login" className="bg-white text-blue-700 hover:bg-blue-50 px-4 py-2 rounded-lg transition-colors text-center">
                 {t('auth.signIn')}
               </Link>
             )}
@@ -60,7 +60,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+            className="md:hidden p-2 rounded-lg hover:bg-blue-800 text-white"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMenuOpen ? (
@@ -74,20 +74,20 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
+          <div className="md:hidden py-4 border-t border-blue-700">
             <div className="flex flex-col space-y-3">
-              <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors px-2 py-1">
+              <Link href="/" className="text-blue-100 hover:text-white transition-colors px-2 py-1">
                 {t('navigation.home')}
               </Link>
-              <Link href="/generate" className="text-gray-700 hover:text-blue-600 transition-colors px-2 py-1">
+              <Link href="/generate" className="text-blue-100 hover:text-white transition-colors px-2 py-1">
                 {t('navigation.create')}
               </Link>
               {session && (
-                <Link href="/batch-generate" className="text-gray-700 hover:text-blue-600 transition-colors px-2 py-1">
+                <Link href="/batch-generate" className="text-blue-100 hover:text-white transition-colors px-2 py-1">
                   Batch Generate
                 </Link>
               )}
-              <Link href="/pricing" className="text-gray-700 hover:text-blue-600 transition-colors px-2 py-1">
+              <Link href="/pricing" className="text-blue-100 hover:text-white transition-colors px-2 py-1">
                 {t('navigation.subscribe')}
               </Link>
               
@@ -99,7 +99,7 @@ export default function Navbar() {
                   {t('auth.logout')}
                 </button>
               ) : (
-                <Link href="/login" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                <Link href="/login" className="bg-white text-blue-700 hover:bg-blue-50 px-4 py-2 rounded-lg transition-colors">
                   {t('auth.signIn')}
                 </Link>
               )}

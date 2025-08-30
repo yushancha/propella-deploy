@@ -23,14 +23,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return 'dark';
   };
 
-  // 应用主题到DOM
+  // 应用主题到DOM - Fixed to work properly
   const applyTheme = (newTheme: ThemeType) => {
     const root = document.documentElement;
     const body = document.body;
 
     // 移除旧的主题类
     root.classList.remove('dark');
-    root.removeAttribute('data-theme');
+    body.classList.remove('dark-mode');
 
     let actualTheme: 'light' | 'dark';
 
@@ -68,14 +68,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return () => {
       mediaQuery.removeEventListener('change', handleSystemThemeChange);
     };
-  }, [theme, applyTheme]);
+  }, [theme]);
 
   // 初始化主题
   useEffect(() => {
     const savedTheme = (localStorage.getItem('theme') as ThemeType) || 'system';
     setTheme(savedTheme);
     applyTheme(savedTheme);
-  }, [applyTheme]);
+  }, []);
 
   const handleSetTheme = (newTheme: ThemeType) => {
     setTheme(newTheme);
