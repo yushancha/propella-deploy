@@ -26,6 +26,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // 应用主题到DOM
   const applyTheme = (newTheme: ThemeType) => {
     const root = document.documentElement;
+    const body = document.body;
 
     // 移除旧的主题类
     root.classList.remove('dark');
@@ -43,8 +44,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (actualTheme === 'dark') {
       root.setAttribute('data-theme', 'dark');
       root.classList.add('dark'); // 保持Tailwind兼容性
+      body.classList.add('dark-mode');
     } else {
       root.setAttribute('data-theme', 'light');
+      body.classList.remove('dark-mode');
     }
 
     setResolvedTheme(actualTheme);

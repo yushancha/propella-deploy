@@ -38,8 +38,6 @@ export default function HomePage() {
             {session ? (
               <div className="flex items-center space-x-4">
                 <Link href="/generate" className="text-foreground hover:text-hover dark:text-foreground-dark dark:hover:text-hover-dark">{t('navigation.create')}</Link>
-                <Link href="/history" className="text-foreground hover:text-hover dark:text-foreground-dark dark:hover:text-hover-dark">History</Link>
-                <Link href="/settings" className="text-foreground hover:text-hover dark:text-foreground-dark dark:hover:text-hover-dark">{t('settings.title')}</Link>
                 <img src={session.user?.image || ''} alt="Avatar" className="w-8 h-8 rounded-full" />
               </div>
             ) : (
@@ -56,34 +54,33 @@ export default function HomePage() {
 
       {/* Add top spacing to avoid content being hidden by fixed navigation bar */}
       <div className="pt-16">
-        {/* Rest of page content remains unchanged */}
-        <div className="relative overflow-hidden">
-          {/* Hero Section */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-            <h1 className="text-4xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-hover bg-clip-text text-transparent">
-              {t('landing.hero.title')}
+        <div className="relative overflow-hidden bg-black">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="w-[140%] h-[140%] -left-1/5 -top-1/5 absolute bg-[radial-gradient(circle_at_30%_20%,rgba(0,128,255,0.25),transparent_40%),radial-gradient(circle_at_70%_60%,rgba(138,43,226,0.25),transparent_35%),radial-gradient(circle_at_50%_100%,rgba(0,255,200,0.15),transparent_40%)] animate-pulse"></div>
+          </div>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 text-center">
+            <h1 className="text-4xl sm:text-6xl font-extrabold mb-6 bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">
+              Generate Epic Game Items with AI Magic
             </h1>
-            <p className="text-xl text-foreground/80 dark:text-foreground-dark/80 mb-8 max-w-3xl mx-auto">
-              {t('landing.hero.subtitle')}
+            <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto">
+              Create pixel-perfect swords, potions, armor and artifacts in seconds. Fuel your game with mesmerizing assets.
             </p>
-
-            {/* CTA Button */}
             <div className="mb-16">
-              {session ? (
-                <Link 
-                  href="/generate"
-                  className="inline-flex items-center px-8 py-4 bg-primary text-foreground-dark rounded-xl font-medium hover:bg-hover dark:bg-primary dark:text-foreground-dark dark:hover:bg-hover-dark transition-colors shadow-lg"
-                >
-                  {t('landing.hero.cta')} →
-                </Link>
-              ) : (
-                <Link
-                  href="/generate"
-                  className="inline-flex items-center px-8 py-4 bg-primary text-foreground-dark rounded-xl font-medium hover:bg-hover dark:bg-primary dark:text-foreground-dark dark:hover:bg-hover-dark transition-colors shadow-lg"
-                >
-                  {t('landing.hero.cta')} →
-                </Link>
-              )}
+              <Link
+                href="/generate"
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-medium hover:from-blue-600 hover:to-purple-700 transition-all shadow-xl shadow-blue-700/30"
+              >
+                Start Creating →
+              </Link>
+            </div>
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 opacity-90">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div key={i} className="aspect-square rounded-lg bg-gradient-to-br from-white/5 to-white/0 border border-white/10 backdrop-blur-sm overflow-hidden">
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-white/50 text-sm">Item {i+1}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

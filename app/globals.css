@@ -69,6 +69,12 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Explicit dark-mode body class for sidebar toggle compatibility */
+body.dark-mode {
+  background-color: #0b0f14;
+  color: #e5e7eb;
+}
+
 /* 滚动条样式 */
 ::-webkit-scrollbar {
   width: 8px;

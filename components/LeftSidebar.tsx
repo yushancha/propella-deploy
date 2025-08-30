@@ -124,11 +124,9 @@ export default function LeftSidebar() {
     { id: 'explore', label: t('sidebar.explore'), icon: <Icons.Explore />, href: '/explore' },
     { id: 'create', label: t('sidebar.create'), icon: <Icons.Create />, href: '/generate' },
     { id: 'edit', label: t('sidebar.edit'), icon: <Icons.Edit />, href: '/edit' },
+    // Personalize now duplicates Subscribe page
     { id: 'personalize', label: t('sidebar.personalize'), icon: <Icons.Personalize />, href: '/personalize' },
-    { id: 'organize', label: t('sidebar.organize'), icon: <Icons.Organize />, href: '/organize' },
     { id: 'subscribe', label: t('sidebar.subscribe'), icon: <Icons.Subscribe />, href: '/subscribe' },
-    { id: 'help', label: t('sidebar.help'), icon: <Icons.Help />, href: '/help' },
-    { id: 'updates', label: t('sidebar.updates'), icon: <Icons.Updates />, href: '/updates', badge: 2 },
     {
       id: 'theme-toggle',
       label: theme === 'light' ? 'Dark Mode' : theme === 'dark' ? 'System' : 'Light Mode',

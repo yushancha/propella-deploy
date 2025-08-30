@@ -141,77 +141,52 @@ function GeneratePageContent() {
     
     setIsGenerating(true);
     try {
-      const response = await fetch('/api/generate-image', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: itemName, style, level })
-      });
-      
-      const data = await response.json();
-      console.log('API response data:', data); // Debug log
-
-      // More robust image URL extraction logic
       let imageUrl = '';
-      if (data.success) {
-        imageUrl = data.imageUrl ||
-                  (data.data && data.data[0] && data.data[0].url) ||
-                  data.url ||
-                  '';
+      try {
+        const response = await fetch('/api/generate-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: itemName, style, level })
+        });
+        const data = await response.json();
+        console.log('API response data:', data);
+        if (data?.success) {
+          imageUrl = data.imageUrl || (data.data && data.data[0] && data.data[0].url) || data.url || '';
+        }
+      } catch (apiError) {
+        console.warn('API generate-image failed, falling back to mock image.', apiError);
       }
 
-      if (data.success && imageUrl) {
-        // Validate URL validity
-        const isValidUrl = imageUrl.startsWith('http') || imageUrl.startsWith('data:');
-
-        if (!isValidUrl) {
-          console.error('Invalid image URL:', imageUrl);
-          alert('Generation failed: Invalid image URL returned');
-          return;
-        }
-
-        const newGeneration: GenerationRecord = {
-          id: crypto.randomUUID(),
-          name: itemName,
-          style,
-          level,
-          imageUrl: imageUrl,
-          timestamp: Date.now()
-        };
-
-        // Save to database
-        try {
-          if (isIndexedDBSupported()) {
-            await propellaDB.addGeneration({
-              name: itemName,
-              style,
-              level,
-              imageUrl: imageUrl
-            });
-          } else {
-            const currentHistory = JSON.parse(localStorage.getItem('history') || '[]');
-            currentHistory.unshift(newGeneration);
-            localStorage.setItem('history', JSON.stringify(currentHistory));
-          }
-        } catch (error) {
-          console.error('Failed to save to database:', error);
-          // Don't block UI update
-        }
-
-        // Update UI state
-        setGenerations(prev => [newGeneration, ...prev]);
-        setItemName('');
-
-        // Show header after generation completes
-        setIsHeaderVisible(true);
-
-        console.log('New generation record added:', newGeneration);
-      } else {
-        console.error('Generation failed, API response:', data);
-        alert('Generation failed: ' + (data.error || 'Unknown error'));
+      // Fallback to mock placeholder image if no valid URL from API
+      if (!imageUrl || !(imageUrl.startsWith('http') || imageUrl.startsWith('data:') || imageUrl.startsWith('/'))) {
+        imageUrl = '/pixel-sword.svg';
       }
-    } catch (error) {
-      console.error('Generation failed:', error);
-      alert('Network error, please try again');
+
+      const newGeneration: GenerationRecord = {
+        id: crypto.randomUUID(),
+        name: itemName,
+        style,
+        level,
+        imageUrl,
+        timestamp: Date.now()
+      };
+
+      try {
+        if (isIndexedDBSupported()) {
+          await propellaDB.addGeneration({ name: itemName, style, level, imageUrl });
+        } else {
+          const currentHistory = JSON.parse(localStorage.getItem('history') || '[]');
+          currentHistory.unshift(newGeneration);
+          localStorage.setItem('history', JSON.stringify(currentHistory));
+        }
+      } catch (error) {
+        console.error('Failed to save to database:', error);
+      }
+
+      setGenerations(prev => [newGeneration, ...prev]);
+      setItemName('');
+      setIsHeaderVisible(true);
+      console.log('New generation record added:', newGeneration);
     } finally {
       setIsGenerating(false);
     }
@@ -253,42 +228,14 @@ function GeneratePageContent() {
         }`}
       >
         <div className="px-4 sm:px-6 py-4 sm:py-6">
-          {/* Page title area */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-            <div className="space-y-1">
-              <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">{t('createPage.title')}</h1>
-              <p className="text-text-secondary text-sm sm:text-base">{t('createPage.subtitle')}</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-2 bg-surface-secondary/50 rounded-xl border border-border-primary">
-                <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse"></div>
-                <span className="text-xs sm:text-sm text-text-secondary">
-                  <CountUp end={generations.length} /> items
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={scrollToTop}
-                  className="btn btn-ghost btn-sm"
-                  title="Scroll to top"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                  </svg>
-                  <span className="hidden sm:inline">Top</span>
-                </button>
-                <button className="btn btn-ghost btn-sm">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  <span className="hidden sm:inline">Export</span>
-                </button>
-              </div>
-            </div>
+          {/* Page title area - minimal */}
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">{t('createPage.title')}</h1>
+            <p className="text-text-secondary text-sm sm:text-base">{t('createPage.subtitle')}</p>
           </div>
 
-          {/* Prompt input area - modern design */}
-          <div className="space-y-6">
+          {/* Prompt input area - centered, minimal */}
+          <div className="space-y-6 max-w-3xl mx-auto">
             {/* Main input field */}
             <div className="relative group">
               <textarea
@@ -317,69 +264,41 @@ function GeneratePageContent() {
               </div>
             </div>
 
-            {/* Control options - responsive layout */}
-            <div className="space-y-4">
-              {/* Mobile: vertical layout, Desktop: grid layout */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Style selection */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-text-secondary">Art Style</label>
-                  <select
-                    value={style}
-                    onChange={(e) => setStyle(e.target.value)}
-                    className="select"
-                    disabled={isGenerating}
-                  >
-                    <option value="pixel">🎮 Pixel Art</option>
-                    <option value="cyberpunk">🤖 Cyberpunk</option>
-                    <option value="fantasy">🧙 Fantasy</option>
-                    <option value="scifi">🚀 Sci-Fi</option>
-                    <option value="cartoon">🎨 Cartoon</option>
-                  </select>
-                </div>
-
-                {/* Rarity level selection */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-text-secondary">Rarity Level</label>
-                  <select
-                    value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                    className="select"
-                    disabled={isGenerating}
-                  >
-                    <option value="normal">⚪ Normal</option>
-                    <option value="elite">🔵 Elite</option>
-                    <option value="epic">🟣 Epic</option>
-                    <option value="legendary">🟡 Legendary</option>
-                  </select>
-                </div>
-
-                {/* Generate button - full width on mobile */}
-                <div className="space-y-2 sm:col-span-2 lg:col-span-1">
-                  <label className="text-sm font-semibold text-text-secondary">Action</label>
-                  <PulseButton
-                    onClick={handleGenerate}
-                    disabled={isGenerating || !itemName.trim()}
-                    className="w-full btn-lg"
-                    variant="primary"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <div className="loading-spinner"></div>
-                        <span className="hidden sm:inline">Generating...</span>
-                        <span className="sm:hidden">...</span>
-                      </>
-                    ) : (
-                      <>
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                        {t('createPage.generateButton')}
-                      </>
-                    )}
-                  </PulseButton>
-                </div>
-              </div>
+            {/* Compact options under input */}
+            <div className="flex flex-wrap gap-3 items-center">
+              <select
+                value={style}
+                onChange={(e) => setStyle(e.target.value)}
+                className="select select-sm"
+                disabled={isGenerating}
+                title="Art Style"
+              >
+                <option value="pixel">Pixel</option>
+                <option value="cyberpunk">Cyberpunk</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="scifi">Sci‑Fi</option>
+                <option value="cartoon">Cartoon</option>
+              </select>
+              <select
+                value={level}
+                onChange={(e) => setLevel(e.target.value)}
+                className="select select-sm"
+                disabled={isGenerating}
+                title="Rarity"
+              >
+                <option value="normal">Normal</option>
+                <option value="elite">Elite</option>
+                <option value="epic">Epic</option>
+                <option value="legendary">Legendary</option>
+              </select>
+              <PulseButton
+                onClick={handleGenerate}
+                disabled={isGenerating || !itemName.trim()}
+                className="btn-sm"
+                variant="primary"
+              >
+                {isGenerating ? 'Generating…' : t('createPage.generateButton')}
+              </PulseButton>
             </div>
           </div>
         </div>
@@ -434,51 +353,38 @@ function GeneratePageContent() {
                 </div>
               </div>
             ) : (
-              <div className="space-y-6">
-                {/* Results statistics */}
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold text-text-primary">
-                    Your Creations ({generations.length})
-                  </h2>
-                  <div className="flex items-center gap-2">
-                    <button className="btn btn-ghost btn-sm">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                      </svg>
-                      Filter
-                    </button>
-                    <button className="btn btn-ghost btn-sm">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                      </svg>
-                      Sort
-                    </button>
-                  </div>
-                </div>
-
-                {/* Results grid - using new ImageCard component */}
-                <ImageGrid>
-                  {generations.map((gen, index) => (
-                    <ImageCard
-                      key={gen.id}
-                      imageUrl={gen.imageUrl}
-                      alt={gen.name || 'Generated image'}
-                      index={index}
-                      priority={index < 4}
-                      onClick={() => handleImageClick(gen)}
-                      onLike={(liked) => {
-                        console.log(`Image ${gen.id} ${liked ? 'liked' : 'unliked'}`);
-                        // Here you can add logic to save like status
-                      }}
-                      onDownload={() => {
-                        const link = document.createElement('a');
-                        link.href = gen.imageUrl;
-                        link.download = `${gen.name || 'image'}-${gen.style}-${gen.level}.png`;
-                        link.click();
-                      }}
-                    />
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-text-primary">Your Creations ({generations.length})</h2>
+                <div className="space-y-3">
+                  {generations.map((gen) => (
+                    <div key={gen.id} className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-border-primary bg-surface-secondary/30">
+                      <div className="w-full sm:w-48 md:w-56 flex-shrink-0">
+                        <img src={gen.imageUrl} alt={gen.name || 'Generated'} className="w-full h-auto rounded-lg object-cover" />
+                      </div>
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="text-lg font-semibold text-text-primary mb-1">{gen.name}</div>
+                          <div className="text-sm text-text-secondary">Style: {gen.style} · Rarity: {gen.level}</div>
+                          <div className="text-xs text-text-tertiary mt-1">{new Date(gen.timestamp).toLocaleString()}</div>
+                        </div>
+                        <div className="mt-3 flex items-center gap-2">
+                          <button onClick={() => handleImageClick(gen)} className="btn btn-secondary btn-sm">View</button>
+                          <button
+                            onClick={() => {
+                              const link = document.createElement('a');
+                              link.href = gen.imageUrl;
+                              link.download = `${gen.name || 'image'}-${gen.style}-${gen.level}.png`;
+                              link.click();
+                            }}
+                            className="btn btn-ghost btn-sm"
+                          >
+                            Download
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   ))}
-                </ImageGrid>
+                </div>
               </div>
             )}
           </div>

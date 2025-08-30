@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 
 export const dynamic = 'force-dynamic';
 
+// Disabled History API as feature removed
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession();
@@ -11,8 +12,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 这里可以添加从数据库获取历史记录的逻辑
-    // 目前返回空数组，因为主要使用 IndexedDB
     return NextResponse.json({ history: [] });
   } catch (error) {
     console.error('History API error:', error);
